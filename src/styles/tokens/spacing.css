@@ -1,0 +1,23 @@
+:root {
+  /* Not a strict 4/8 grid — these are the literal values used in the hero. */
+  --ccc-space-1: 6px;
+  --ccc-space-2: 10px;
+  --ccc-space-3: 14px;
+  --ccc-space-4: 18px;
+  --ccc-space-5: 22px;
+  --ccc-space-6: 26px;
+  --ccc-space-7: 28px;
+  --ccc-space-8: 32px;
+  --ccc-space-9: 48px;
+  --ccc-space-10: 64px;
+
+  --ccc-gutter: clamp(24px, 5vw, 64px); /* @kind spacing */ /* page side padding */
+  --ccc-header-pad-y: 26px; /* @kind spacing */
+  --ccc-hero-pad-top: 130px; /* @kind spacing */
+  --ccc-hero-pad-bottom: 100px; /* @kind spacing */
+  --ccc-stack-gap: 26px;                  /* hero copy column */
+  --ccc-nav-gap: 28px;
+  --ccc-button-gap: 14px;
+  --ccc-max-width: 1440px; /* @kind spacing */
+  --ccc-copy-column: 640px; /* @kind spacing */
+}

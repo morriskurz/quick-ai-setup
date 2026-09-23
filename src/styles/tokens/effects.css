@@ -1,0 +1,35 @@
+:root {
+  /* Radii — small and tight; nothing is pill-shaped. */
+  --ccc-radius-sm: 9px;    /* ghost nav button */
+  --ccc-radius-md: 10px;   /* primary + secondary buttons */
+
+  /* Elevation is cyan light, never black shadow. */
+  --ccc-glow-cyan: 0 8px 32px rgba(123, 200, 228, 0.22);
+  --ccc-glow-cyan-hover: 0 10px 44px rgba(123, 200, 228, 0.38);
+
+  /* Atmosphere layers, stacked over the motif in this order. */
+  --ccc-bloom: radial-gradient(46% 60% at 72% 38%, rgba(123,200,228,0.10), transparent 70%),
+               radial-gradient(38% 48% at 84% 78%, rgba(184,45,191,0.09), transparent 70%); /* @kind other */
+  --ccc-vignette: radial-gradient(120% 90% at 50% 42%, transparent 52%, rgba(1,8,8,0.78) 100%),
+                  linear-gradient(180deg, rgba(1,8,8,0.5), transparent 18% 82%, rgba(1,8,8,0.6)); /* @kind other */
+  --ccc-motif-mask: linear-gradient(90deg, transparent 0%, black 30%); /* @kind other */
+  --ccc-grain-opacity: 0.05; /* @kind other */
+  --ccc-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E"); /* @kind other */
+
+  /* Headline gradient — cyan → near-white → magenta, left to right. */
+  --ccc-text-gradient: linear-gradient(95deg, #7BC8E4 10%, #E9FAFF 55%, #B82DBF 115%); /* @kind other */
+
+  /* Motion */
+  --ccc-ease: cubic-bezier(0.2, 0.7, 0.2, 1); /* @kind other */
+  --ccc-dur-enter: 0.85s; /* @kind other */
+  --ccc-dur-enter-fast: 0.8s; /* @kind other */
+  --ccc-enter-shift: 18px; /* @kind spacing */
+  --ccc-stagger: 0.12s; /* @kind other */
+  --ccc-rotation-speed: 0.15; /* @kind other */ /* rad/s, 3D panel group */
+  --ccc-fade-in-3d: 1.15s; /* @kind other */ /* per-layer material fade */
+}
+
+@keyframes ccc-up {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

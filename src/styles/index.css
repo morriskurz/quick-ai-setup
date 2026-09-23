@@ -1,9 +1,150 @@
+/*
+ * creativecodecampus design system, ported for quick-ai-setup.
+ * Token files in ./tokens/ are verbatim copies of design-system/tokens/*.css
+ * (print.css skipped). Do not edit them; extend here and note it in DESIGN_NOTES.md.
+ */
+@import './tokens/fonts.css';
 @import 'tailwindcss';
+@import './tokens/colors.css';
+@import './tokens/typography.css';
+@import './tokens/spacing.css';
+@import './tokens/effects.css';
+@import './components.css';
 
 /*
- * PENDING: creativecodecampus design-system port.
- * The DS tokens (tokens/*.css, fonts.css) could not be pulled in the foundation
- * session — see DESIGN_NOTES.md. When they are pulled, copy them verbatim into
- * src/styles/tokens/, import them here, and map them to Tailwind with @theme.
- * Do not invent token names or values in the meantime.
+ * Tailwind theme = brand tokens only. The default palette, font stacks, radii and
+ * type scale are cleared so an off-brand utility (bg-blue-500, rounded-full,
+ * text-sm) simply does not exist. Magenta is deliberately not exposed as a
+ * utility colour: it is a light source, never a surface, border or text colour.
  */
+@theme inline {
+  --color-*: initial;
+  --color-page: var(--surface-page);
+  --color-desk: var(--surface-desk);
+  --color-cyan: var(--ccc-cyan);
+  --color-cyan-hover: var(--ccc-cyan-hover);
+  --color-cyan-pale: var(--ccc-cyan-pale);
+  --color-cyan-08: var(--ccc-cyan-08);
+  --color-cyan-18: var(--ccc-cyan-18);
+  --color-cyan-35: var(--ccc-cyan-35);
+  --color-cyan-50: var(--ccc-cyan-50);
+  --color-cyan-70: var(--ccc-cyan-70);
+  --color-ink-display: var(--ccc-text-display);
+  --color-ink-strong: var(--ccc-text-strong);
+  --color-ink: var(--ccc-text);
+  --color-ink-body: var(--ccc-text-body);
+  --color-ink-muted: var(--ccc-text-muted);
+  --color-ink-nav: var(--ccc-text-nav);
+  --color-on-cyan: var(--ccc-on-cyan);
+  --color-hairline: var(--ccc-hairline);
+
+  --font-*: initial;
+  --font-sans: var(--ccc-font-sans);
+  --font-mono: var(--ccc-font-mono);
+
+  --radius-*: initial;
+  --radius-sm: var(--ccc-radius-sm);
+  --radius-md: var(--ccc-radius-md);
+
+  /* Type scale: display, 18 body, 16 UI, 15 nav, 13.5 eyebrow, 13 meta. */
+  --text-*: initial;
+  --text-display: var(--ccc-display-size);
+  --text-display--line-height: var(--ccc-display-lh);
+  --text-display--letter-spacing: var(--ccc-display-ls);
+  /* Addition: section headline. The source has one screen, so no h2 size exists. */
+  --text-section: clamp(30px, 3.4vw, 44px);
+  --text-section--line-height: 1.08;
+  --text-section--letter-spacing: -0.025em;
+  --text-body: var(--ccc-body-size);
+  --text-body--line-height: var(--ccc-body-lh);
+  --text-ui: var(--ccc-ui-size);
+  --text-ui--line-height: 1.5;
+  --text-nav: var(--ccc-nav-size);
+  --text-nav--line-height: 1.45;
+  --text-eyebrow: var(--ccc-eyebrow-size);
+  --text-eyebrow--letter-spacing: var(--ccc-eyebrow-ls);
+  --text-meta: var(--ccc-footnote-size);
+  --text-meta--letter-spacing: var(--ccc-footnote-ls);
+  --text-meta--line-height: 1.6;
+  /* Code blocks reuse the eyebrow size so mono stays on the existing scale. */
+  --text-code: var(--ccc-eyebrow-size);
+  --text-code--line-height: 1.7;
+
+  --spacing-gutter: var(--ccc-gutter);
+  --container-page: var(--ccc-max-width);
+  --container-copy: var(--ccc-copy-column);
+  --container-measure: var(--ccc-body-measure);
+
+  --ease-brand: var(--ccc-ease);
+  --shadow-*: initial;
+  --shadow-glow: var(--ccc-glow-cyan);
+  --shadow-glow-hover: var(--ccc-glow-cyan-hover);
+}
+
+@layer base {
+  html {
+    background: var(--surface-page);
+    color-scheme: dark;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 24px;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    background: var(--surface-page);
+    color: var(--text-default);
+    font-family: var(--ccc-font-sans);
+    font-size: var(--ccc-ui-size);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: var(--selection-bg);
+    color: var(--text-display);
+  }
+
+  /* Addition: the brand defines no focus style. 2px cyan-70, 3px offset. */
+  :focus-visible {
+    outline: 2px solid var(--ccc-cyan-70);
+    outline-offset: 3px;
+  }
+
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+  }
+
+  a,
+  button,
+  [role='tab'] {
+    touch-action: manipulation;
+  }
+
+  button,
+  [role='tab'] {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+}

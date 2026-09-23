@@ -1,0 +1,35 @@
+:root {
+  --ccc-font-sans: 'Schibsted Grotesk', system-ui, sans-serif;
+  --ccc-font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+  /* Display — hero headline, fluid */
+  --ccc-display-size: clamp(44px, 5.8vw, 80px); /* @kind font */
+  --ccc-display-weight: 700; /* @kind font */
+  --ccc-display-lh: 1.02; /* @kind font */
+  --ccc-display-ls: -0.03em; /* @kind font */
+
+  /* Wordmark */
+  --ccc-wordmark-size: 19px; /* @kind font */
+  --ccc-wordmark-weight: 700; /* @kind font */
+  --ccc-wordmark-ls: -0.02em; /* @kind font */
+
+  /* Body */
+  --ccc-body-size: 18px; /* @kind font */
+  --ccc-body-lh: 1.65; /* @kind font */
+  --ccc-body-measure: 50ch; /* @kind spacing */
+
+  /* UI text */
+  --ccc-ui-size: 16px; /* @kind font */
+  --ccc-ui-weight: 500; /* @kind font */
+  --ccc-ui-weight-strong: 600; /* @kind font */
+  --ccc-nav-size: 15px; /* @kind font */
+
+  /* Mono — eyebrow label and footnote row */
+  --ccc-eyebrow-size: 13.5px; /* @kind font */
+  --ccc-eyebrow-ls: 0.14em; /* @kind font */
+  --ccc-footnote-size: 13px; /* @kind font */
+  --ccc-footnote-ls: 0.02em; /* @kind font */
+
+  --text-display-font: var(--ccc-font-sans);
+  --text-mono-font: var(--ccc-font-mono);
+}

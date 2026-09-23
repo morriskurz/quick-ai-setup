@@ -1,0 +1,508 @@
+/*
+ * Component styles for the ported design-system primitives and page controls.
+ * Rules from the brand readme that shape everything here:
+ *  - hover = colour/opacity only, ~180ms on --ccc-ease; nothing moves or scales
+ *  - press = deeper ink, no scale, no translate
+ *  - borders are alpha hairlines; the primary button alone carries the cyan glow
+ *  - every :hover lives behind (hover: hover) so taps do not leave it stuck
+ */
+
+@layer components {
+  /* ---------- Button (primary / secondary / ghost) ---------- */
+  .ccc-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: var(--ccc-font-sans);
+    font-size: var(--ccc-ui-size);
+    line-height: 1;
+    border-radius: var(--ccc-radius-md);
+    border: 1px solid transparent;
+    text-decoration: none;
+    cursor: pointer;
+    white-space: nowrap;
+    transition:
+      background-color 180ms var(--ccc-ease),
+      border-color 180ms var(--ccc-ease),
+      box-shadow 220ms var(--ccc-ease),
+      color 180ms var(--ccc-ease);
+  }
+
+  .ccc-btn--primary {
+    padding: 14px 26px;
+    font-weight: var(--ccc-ui-weight-strong);
+    background: var(--ccc-cyan);
+    color: var(--ccc-on-cyan);
+    box-shadow: var(--ccc-glow-cyan);
+  }
+
+  .ccc-btn--secondary {
+    padding: 13px 24px;
+    font-weight: var(--ccc-ui-weight);
+    border-color: var(--ccc-hairline);
+    background: transparent;
+    color: #dff0f7;
+  }
+
+  .ccc-btn--ghost {
+    padding: 9px 18px;
+    font-size: var(--ccc-nav-size);
+    font-weight: var(--ccc-ui-weight);
+    border-radius: var(--ccc-radius-sm);
+    border-color: var(--ccc-cyan-35);
+    background: transparent;
+    color: #dff2fa;
+  }
+
+  /* Small ghost used for per-block copy buttons. Same skin, tighter box. */
+  .ccc-btn--ghost.ccc-btn--small {
+    padding: 6px 12px;
+    font-size: var(--ccc-footnote-size);
+    min-width: 72px;
+  }
+
+  @media (hover: hover) {
+    .ccc-btn--primary:hover {
+      background: var(--ccc-cyan-hover);
+      color: var(--ccc-on-cyan-active);
+      box-shadow: var(--ccc-glow-cyan-hover);
+    }
+    .ccc-btn--secondary:hover {
+      border-color: rgba(123, 200, 228, 0.55);
+      background: rgba(123, 200, 228, 0.06);
+      color: #ffffff;
+    }
+    .ccc-btn--ghost:hover {
+      border-color: var(--ccc-cyan-70);
+      background: var(--ccc-cyan-08);
+      color: #ffffff;
+    }
+  }
+
+  /* Press: deeper ink on the lightened fill. No scale, no translate. */
+  .ccc-btn--primary:active {
+    background: var(--ccc-cyan-hover);
+    color: var(--ccc-on-cyan-active);
+  }
+  .ccc-btn--secondary:active,
+  .ccc-btn--ghost:active {
+    border-color: var(--ccc-cyan-70);
+    background: var(--ccc-cyan-08);
+    color: #ffffff;
+  }
+
+  /* ---------- Type primitives ---------- */
+  .ccc-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--ccc-font-mono);
+    font-size: var(--ccc-eyebrow-size);
+    letter-spacing: var(--ccc-eyebrow-ls);
+    text-transform: uppercase;
+    color: var(--ccc-cyan);
+  }
+  .ccc-eyebrow__rule {
+    width: 22px;
+    height: 1px;
+    flex: none;
+    background: currentColor;
+    opacity: 0.7;
+  }
+
+  .ccc-gradient-text {
+    background-image: var(--ccc-text-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .ccc-meta {
+    font-family: var(--ccc-font-mono);
+    font-size: var(--ccc-footnote-size);
+    letter-spacing: var(--ccc-footnote-ls);
+    color: var(--ccc-text-muted);
+  }
+  .ccc-meta__dot {
+    color: var(--ccc-cyan);
+    opacity: 0.8;
+  }
+
+  .ccc-wordmark {
+    font-family: var(--ccc-font-sans);
+    font-weight: var(--ccc-wordmark-weight);
+    letter-spacing: var(--ccc-wordmark-ls);
+    color: var(--ccc-text-strong);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .ccc-wordmark__accent {
+    color: var(--ccc-cyan);
+  }
+
+  /* ---------- Links ---------- */
+  .ccc-navlink {
+    font-family: var(--ccc-font-sans);
+    font-size: var(--ccc-nav-size);
+    color: var(--ccc-text-nav);
+    text-decoration: none;
+    transition: color 180ms var(--ccc-ease);
+  }
+  @media (hover: hover) {
+    .ccc-navlink:hover {
+      color: var(--ccc-text);
+    }
+  }
+
+  /* Links inside prose. The persistent cyan-35 hairline underline is an addition
+     so links are not told apart by colour alone (WCAG 1.4.1); hover only
+     changes colour, as the brand requires. */
+  .ccc-link {
+    color: var(--ccc-cyan);
+    text-decoration-line: underline;
+    text-decoration-color: var(--ccc-cyan-35);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    transition:
+      color 180ms var(--ccc-ease),
+      text-decoration-color 180ms var(--ccc-ease);
+  }
+  @media (hover: hover) {
+    .ccc-link:hover {
+      color: var(--ccc-cyan-pale);
+      text-decoration-color: var(--ccc-cyan-70);
+    }
+  }
+
+  /* ---------- Hairline card (the only card the brand allows) ---------- */
+  .ccc-hairline-card {
+    border: 1px solid var(--ccc-hairline);
+    border-radius: var(--ccc-radius-md);
+    background: transparent;
+  }
+
+  /* ---------- Checkbox choice ---------- */
+  .ccc-choice {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 14px;
+    align-items: start;
+    padding: 18px 18px 18px 16px;
+    border: 1px solid var(--ccc-hairline);
+    border-radius: var(--ccc-radius-md);
+    background: transparent;
+    cursor: pointer;
+    transition:
+      border-color 180ms var(--ccc-ease),
+      background-color 180ms var(--ccc-ease);
+  }
+  .ccc-choice:has(input:checked) {
+    border-color: var(--ccc-cyan-50);
+    background: var(--ccc-cyan-08);
+  }
+  @media (hover: hover) {
+    .ccc-choice:hover {
+      border-color: var(--ccc-cyan-35);
+    }
+    .ccc-choice:has(input:checked):hover {
+      border-color: var(--ccc-cyan-70);
+    }
+  }
+  .ccc-choice:has(input:focus-visible) {
+    outline: 2px solid var(--ccc-cyan-70);
+    outline-offset: 3px;
+  }
+
+  /* The real checkbox stays in the DOM (and the a11y tree), visually hidden. */
+  .ccc-visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* Addition: custom checkbox. A 20px hairline square (4px radius, reads square,
+     never a circle). Checked = cyan fill behind a ground-coloured inset ring:
+     a filled instrument light instead of a tick icon. */
+  .ccc-check {
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+    flex: none;
+    border: 1px solid rgba(234, 246, 250, 0.42);
+    border-radius: 4px;
+    background: transparent;
+    transition:
+      background-color 180ms var(--ccc-ease),
+      border-color 180ms var(--ccc-ease),
+      box-shadow 180ms var(--ccc-ease);
+  }
+  .ccc-choice:has(input:checked) .ccc-check {
+    border-color: var(--ccc-cyan);
+    background: var(--ccc-cyan);
+    box-shadow: inset 0 0 0 3px var(--ccc-black);
+  }
+
+  /* ---------- Segmented radio group + tabs (OS selector) ---------- */
+  .ccc-segment {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 4px;
+    border: 1px solid var(--ccc-hairline);
+    border-radius: var(--ccc-radius-md);
+  }
+  .ccc-segment__item {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    padding: 9px 16px;
+    border: 1px solid transparent;
+    border-radius: 7px;
+    font-family: var(--ccc-font-sans);
+    font-size: var(--ccc-nav-size);
+    font-weight: var(--ccc-ui-weight);
+    color: var(--ccc-text-nav);
+    background: transparent;
+    cursor: pointer;
+    transition:
+      color 180ms var(--ccc-ease),
+      border-color 180ms var(--ccc-ease),
+      background-color 180ms var(--ccc-ease);
+  }
+  @media (hover: hover) {
+    .ccc-segment__item:hover {
+      color: var(--ccc-text);
+    }
+  }
+  .ccc-segment__item[aria-selected='true'],
+  .ccc-segment__item:has(input:checked) {
+    color: #ffffff;
+    border-color: var(--ccc-cyan-50);
+    background: var(--ccc-cyan-08);
+  }
+  .ccc-segment__item:has(input:focus-visible) {
+    outline: 2px solid var(--ccc-cyan-70);
+    outline-offset: 2px;
+  }
+
+  /* ---------- Code block ---------- */
+  .ccc-code {
+    border: 1px solid var(--ccc-hairline);
+    border-radius: var(--ccc-radius-md);
+    background: transparent;
+    min-width: 0;
+  }
+  .ccc-code__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 8px 8px 16px;
+    border-bottom: 1px solid var(--ccc-hairline);
+  }
+  .ccc-code__pre {
+    margin: 0;
+    padding: 14px 16px 16px;
+    overflow-x: auto;
+    font-family: var(--ccc-font-mono);
+    font-size: var(--ccc-eyebrow-size);
+    line-height: 1.7;
+    color: var(--ccc-text);
+    white-space: pre;
+    tab-size: 2;
+    -webkit-overflow-scrolling: touch;
+  }
+  .ccc-code__pre--wrap {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  /* Hairline scrollbars on scrollable mono blocks. */
+  .ccc-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: var(--ccc-cyan-35) transparent;
+  }
+
+  /* ---------- Motion ---------- */
+
+  /* The one entrance: ccc-up. `backwards` (not `both`) so no transform lingers
+     after the animation, which would trap position:fixed/sticky descendants. */
+  .ccc-enter {
+    animation: ccc-up var(--ccc-dur-enter) var(--ccc-ease) var(--enter-delay, 0s) backwards;
+  }
+
+  /* Scroll reveal: hidden only once JS has armed it, so no-JS still shows content. */
+  .ccc-reveal[data-reveal='armed'] {
+    opacity: 0;
+  }
+  .ccc-reveal[data-reveal='shown'] {
+    animation: ccc-up var(--ccc-dur-enter) var(--ccc-ease) var(--enter-delay, 0s) backwards;
+  }
+
+  /* OS tab content swap: opacity cross-fade only. */
+  .ccc-fade {
+    animation: ccc-fade 200ms var(--ccc-ease) backwards;
+  }
+
+  /* A prompt line that just appeared: fades in and settles from cyan to its
+     resting colour, so ticking a box visibly changes the output. */
+  .ccc-line-new {
+    animation: ccc-line-new 900ms var(--ccc-ease) backwards;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ccc-enter,
+    .ccc-reveal[data-reveal='shown'],
+    .ccc-fade {
+      animation: none;
+    }
+    .ccc-reveal[data-reveal='armed'] {
+      opacity: 1;
+    }
+    /* Keep the colour cue (it explains the change) but drop the fade. */
+    .ccc-line-new {
+      animation: none;
+      color: var(--ccc-cyan);
+    }
+  }
+}
+
+@keyframes ccc-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes ccc-line-new {
+  0% {
+    opacity: 0;
+    color: var(--ccc-cyan);
+  }
+  30% {
+    opacity: 1;
+    color: var(--ccc-cyan);
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@layer components {
+  /* Hero motif placement. Narrow screens: the scene sits behind the copy and
+     fades out downward. From 768px: right 78%, masked in from the left (hero kit). */
+  .hero-motif {
+    opacity: 0.5;
+    -webkit-mask-image: linear-gradient(180deg, black 0%, black 34%, transparent 72%);
+    mask-image: linear-gradient(180deg, black 0%, black 34%, transparent 72%);
+  }
+  @media (min-width: 768px) {
+    .hero-motif {
+      opacity: 1;
+      -webkit-mask-image: var(--ccc-motif-mask);
+      mask-image: var(--ccc-motif-mask);
+    }
+  }
+}
+
+@layer components {
+  /* Addition: the brand's first photographic surface. Readme, Imagery: a photo
+     "must be graded cool and dark and sit under the same vignette + grain".
+     Any image placed in .ccc-photo gets it: greyscale + darkened grade, a cyan
+     tint (colour blend), the radial vignette and 5% overlay grain. 10px radius,
+     hairline, no circle crop, no shadow. */
+  .ccc-photo {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    border: 1px solid var(--ccc-hairline);
+    border-radius: var(--ccc-radius-md);
+    background: var(--ccc-black);
+    isolation: isolate;
+  }
+  .ccc-photo__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(1) brightness(0.74) contrast(1.12);
+  }
+  /* Cyan grade: colour blend tints the greyscale image without a haze. */
+  .ccc-photo__tint {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: var(--ccc-cyan);
+    mix-blend-mode: color;
+    opacity: 0.26;
+  }
+  /* Vignette (same radial as the motif stack) plus a slight darkening at the foot. */
+  .ccc-photo::before,
+  .ccc-photo::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .ccc-photo::before {
+    background:
+      radial-gradient(118% 84% at 50% 40%, transparent 42%, rgba(1, 8, 8, 0.72) 100%),
+      linear-gradient(180deg, transparent 55%, rgba(1, 8, 8, 0.35));
+    z-index: 1;
+  }
+  .ccc-photo::after {
+    background-image: var(--ccc-grain);
+    opacity: var(--ccc-grain-opacity);
+    mix-blend-mode: overlay;
+    z-index: 2;
+  }
+  .ccc-photo__empty {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+  }
+}
+
+@layer components {
+  /* Mobile bottom sheet: the body opens upward above the bar. grid-template-rows
+     0fr → 1fr is the one height-style animation allowed (accordion case). */
+  .ccc-sheet__body {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 280ms var(--ccc-ease);
+  }
+  .ccc-sheet__body[data-open] {
+    grid-template-rows: 1fr;
+  }
+  .ccc-sheet__toggle {
+    color: var(--ccc-text-nav);
+    cursor: pointer;
+    transition: color 180ms var(--ccc-ease);
+  }
+  .ccc-sheet__toggle:active {
+    color: var(--ccc-text);
+  }
+  @media (hover: hover) {
+    .ccc-sheet__toggle:hover {
+      color: var(--ccc-text);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ccc-sheet__body {
+      transition: none;
+    }
+  }
+}

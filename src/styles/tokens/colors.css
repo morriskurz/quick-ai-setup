@@ -1,0 +1,62 @@
+:root {
+  /* --- Base: near-black ground. Everything is built on this. --- */
+  --ccc-black: #010808;          /* canvas, 3D scene background, print ground */
+  --ccc-black-2: #0b1214;        /* desk / outside-the-page surface */
+  --ccc-ink-panel: #03090c;      /* inlaid screen surface inside the 3D panel */
+
+  /* --- Brand cyan: rim light, edges, wireframe, primary CTA --- */
+  --ccc-cyan: #7BC8E4;
+  --ccc-cyan-hover: #94D6EE;
+  --ccc-cyan-bright: #9AD9F0;
+  --ccc-cyan-pale: #A9DCF1;      /* link hover */
+  --ccc-cyan-deep: #5FB7DC;
+  --ccc-cyan-08: rgba(123, 200, 228, 0.08);
+  --ccc-cyan-18: rgba(123, 200, 228, 0.18);
+  --ccc-cyan-35: rgba(123, 200, 228, 0.35);
+  --ccc-cyan-50: rgba(123, 200, 228, 0.50);
+  --ccc-cyan-70: rgba(123, 200, 228, 0.70);
+
+  /* --- Accent magenta: second light source, never a surface --- */
+  --ccc-magenta: #B82DBF;
+  --ccc-magenta-bright: #D14FD6;
+  --ccc-magenta-deep: #8E2094;
+  --ccc-magenta-09: rgba(184, 45, 191, 0.09);
+
+  /* --- Type on dark --- */
+  --ccc-text-display: #F4FBFE;
+  --ccc-text-strong: #F2FAFD;
+  --ccc-text: #EAF6FA;
+  --ccc-text-body: rgba(214, 235, 242, 0.70);
+  --ccc-text-muted: rgba(214, 235, 242, 0.42);
+  --ccc-text-nav: rgba(234, 246, 250, 0.62);
+  --ccc-on-cyan: #021014;         /* label on a cyan fill */
+  --ccc-on-cyan-active: #010B0E;
+  --ccc-hairline: rgba(234, 246, 250, 0.18);
+
+  /* --- Material palette of the 3D motif (studio lights + surfaces) --- */
+  --ccc-metal: #C9D9DF;           /* brushed panel, metalness .82 / roughness .28 */
+  --ccc-glass: #9FD2E6;           /* tinted translucent panel, clearcoat 1 */
+  --ccc-ui-soft: #D3EBF4;         /* glowing inlaid content blocks */
+  --ccc-ui-dim: #9FC4D2;          /* body-copy blocks, soft front light */
+  --ccc-light-ceiling: #CFE4EC;
+  --ccc-light-sheen: #BCD8E4;
+  --ccc-light-spec: #FFFFFF;      /* narrow white strip */
+
+  /* --- Semantic aliases: use these in product code --- */
+  --surface-page: var(--ccc-black);
+  --surface-desk: var(--ccc-black-2);
+  --surface-screen: var(--ccc-ink-panel);
+  --text-display: var(--ccc-text-display);
+  --text-default: var(--ccc-text);
+  --text-secondary: var(--ccc-text-body);
+  --text-tertiary: var(--ccc-text-muted);
+  --text-nav: var(--ccc-text-nav);
+  --accent: var(--ccc-cyan);
+  --accent-hover: var(--ccc-cyan-hover);
+  --accent-secondary: var(--ccc-magenta);
+  --border-subtle: var(--ccc-hairline);
+  --border-accent: var(--ccc-cyan-35);
+  --link: var(--ccc-cyan);
+  --link-hover: var(--ccc-cyan-pale);
+  --selection-bg: var(--ccc-cyan-35);
+}

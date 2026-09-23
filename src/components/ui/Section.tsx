@@ -1,0 +1,33 @@
+import type { ReactNode } from 'react';
+import { useReveal } from '../../hooks/useReveal';
+import { EyebrowLabel, GradientHeadline } from '../ds';
+
+interface SectionProps {
+  id: string;
+  eyebrow: string;
+  lead: string;
+  gradient: string;
+  /** One or two sentences under the headline. */
+  intro?: ReactNode;
+  children?: ReactNode;
+  className?: string;
+}
+
+/**
+ * Page section: eyebrow, two-sentence gradient headline, short intro, content.
+ * Reveals once with ccc-up when it first scrolls into view.
+ */
+export function Section({ id, eyebrow, lead, gradient, intro, children, className = '' }: SectionProps) {
+  const ref = useReveal<HTMLElement>();
+  const headingId = `${id}-heading`;
+  return (
+    <section ref={ref} id={id} aria-labelledby={headingId} className={`ccc-reveal scroll-mt-6 ${className}`}>
+      <div className="flex max-w-copy flex-col gap-[18px]">
+        <EyebrowLabel>{eyebrow}</EyebrowLabel>
+        <GradientHeadline as="h2" size="section" id={headingId} lead={lead} gradient={gradient} />
+        {intro && <div className="max-w-measure text-body text-ink-body">{intro}</div>}
+      </div>
+      {children && <div className="mt-10">{children}</div>}
+    </section>
+  );
+}
