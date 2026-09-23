@@ -7,7 +7,7 @@ export const agentSteps: Step[] = [
   {
     id: 'install-claude-code',
     title: 'Install Claude Code',
-    why: 'Claude Code is the coding agent we recommend. It installs as a single program that updates itself, and it does not need Node.',
+    why: 'The agent I recommend: one self-updating program, no Node.js needed.',
     kind: 'command',
     agents: ['claude-code'],
     commands: {
@@ -20,12 +20,11 @@ export const agentSteps: Step[] = [
   {
     id: 'login-claude-code',
     title: 'Sign in to Claude Code',
-    why: 'Claude Code runs on your Claude subscription. It needs Pro, Max, Team or Enterprise; the free plan does not include it.',
+    why: 'Needs a paid Claude plan: Pro, Max, Team or Enterprise.',
     kind: 'human',
     agents: ['claude-code'],
     human: {
-      instructions:
-        'In a terminal, type claude and press Enter. A browser window opens: sign in with your Claude account and confirm. Close Claude Code again with /exit if you only wanted to sign in.',
+      instructions: 'Run claude in a terminal. Sign in with your Claude account in the browser that opens, then type /exit.',
       url: 'https://claude.ai',
     },
     docsUrl: 'https://code.claude.com/docs/en/setup#authenticate',
@@ -33,7 +32,7 @@ export const agentSteps: Step[] = [
   {
     id: 'install-codex',
     title: 'Install Codex',
-    why: 'Codex is OpenAI’s coding agent. It is the sensible choice if your company already pays for ChatGPT Plus, Business or Enterprise.',
+    why: 'OpenAI’s coding agent; it runs on your ChatGPT plan.',
     kind: 'command',
     agents: ['codex'],
     commands: {
@@ -46,12 +45,11 @@ export const agentSteps: Step[] = [
   {
     id: 'login-codex',
     title: 'Sign in to Codex',
-    why: 'Codex runs on your ChatGPT plan. Signing in with ChatGPT avoids setting up a separate API key.',
+    why: 'Signing in with ChatGPT avoids a separate API key.',
     kind: 'human',
     agents: ['codex'],
     human: {
-      instructions:
-        'In a terminal, type codex and press Enter. Choose “Sign in with ChatGPT” and finish the sign-in in the browser.',
+      instructions: 'Run codex in a terminal. Choose “Sign in with ChatGPT” and finish in the browser.',
       url: 'https://chatgpt.com',
     },
     docsUrl: 'https://developers.openai.com/codex/cli',
@@ -59,11 +57,11 @@ export const agentSteps: Step[] = [
   {
     id: 'install-opencode',
     title: 'Install OpenCode',
-    why: 'OpenCode is an open-source coding agent that works with many model providers. On Windows its own docs recommend WSL; the npm route below is one of the native options they list.',
+    why: 'Open-source coding agent that works with many model providers.',
     kind: 'command',
     agents: ['opencode'],
     commands: {
-      windows: [{ run: 'npm install -g opencode-ai', note: 'Needs Node.js, which is installed in an earlier step.' }],
+      windows: [{ run: 'npm install -g opencode-ai', note: 'Needs Node.js from the earlier step.' }],
       macos: [{ run: 'curl -fsSL https://opencode.ai/install | bash' }],
       linux: [{ run: 'curl -fsSL https://opencode.ai/install | bash' }],
     },
@@ -72,12 +70,12 @@ export const agentSteps: Step[] = [
   {
     id: 'login-opencode',
     title: 'Connect OpenCode to a model provider',
-    why: 'OpenCode does not come with a model. You connect it to a provider account once, and it remembers the connection.',
+    why: 'OpenCode has no model of its own; connect a provider account once.',
     kind: 'human',
     agents: ['opencode'],
     human: {
       instructions:
-        'In a terminal, type opencode and press Enter. Type /connect, pick a provider, and follow its sign-in. If the provider shows you a key, paste it into OpenCode yourself; never paste it into a chat.',
+        'Run opencode in a terminal. Type /connect, pick a provider and sign in. If it shows you a key, paste it into OpenCode yourself, never into a chat.',
       url: 'https://opencode.ai/docs',
     },
     docsUrl: 'https://opencode.ai/docs',
@@ -90,22 +88,21 @@ export const agents: AgentOption[] = [
     id: 'claude-code',
     label: 'Claude Code',
     recommended: true,
-    summary:
-      'Anthropic’s coding agent. Recommended: every tool on this page works with it, and a few (Claude in Chrome, automatic office-file skills) work only with it. Needs a paid Claude plan.',
+    summary: 'Anthropic’s agent. Needs a paid Claude plan. Required for Claude in Chrome.',
     installStepId: 'install-claude-code',
   },
   {
     id: 'codex',
     label: 'Codex',
     recommended: false,
-    summary: 'OpenAI’s coding agent. Choose it if your company already pays for ChatGPT Plus, Business or Enterprise.',
+    summary: 'OpenAI’s agent, for companies already on ChatGPT Plus, Business or Enterprise.',
     installStepId: 'install-codex',
   },
   {
     id: 'opencode',
     label: 'OpenCode',
     recommended: false,
-    summary: 'Open-source coding agent that works with many model providers. On Windows, its docs recommend running it in WSL.',
+    summary: 'Open-source, many model providers. On Windows, its docs recommend WSL.',
     installStepId: 'install-opencode',
   },
 ];

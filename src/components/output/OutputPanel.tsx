@@ -27,7 +27,6 @@ export function OutputPanel({ prompt, meta }: OutputPanelProps) {
         className="min-h-[160px] flex-1 border-y border-hairline py-4"
       />
       <CopyButton variant="primary" label={sectionCopy.setup.copyPromptCta} getText={() => prompt} className="w-full" />
-      <p className="m-0 text-meta leading-[1.6] text-ink-muted">Updates as you tick. Paste it into your agent.</p>
     </section>
   );
 }

@@ -97,7 +97,7 @@ export function StepItem({ step, index, selection, os, verifyScript }: StepItemP
             <EyebrowLabel as="p" className="m-0">
               {copy.humanStepLabel}
             </EyebrowLabel>
-            <p className="m-0 text-ui leading-[1.65] text-ink">
+            <p className="m-0 whitespace-pre-line text-ui leading-[1.65] text-ink">
               <RichText text={step.human.instructions} />
             </p>
             {step.human.url && (

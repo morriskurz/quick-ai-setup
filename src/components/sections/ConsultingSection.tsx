@@ -6,8 +6,7 @@ const isExternal = (url: string) => /^https?:\/\//.test(url);
 
 /**
  * Consulting offer: photo beside copy on desktop, stacked on mobile. The photo
- * frame applies the brand's photo treatment (cool/dark grade, cyan tint,
- * vignette, 5% grain) to any image dropped into CONSULTING.photoSrc.
+ * shows in natural colour (owner's choice, overriding the brand's photo grade).
  */
 export function ConsultingSection() {
   const ref = useReveal<HTMLElement>();
@@ -34,7 +33,6 @@ export function ConsultingSection() {
           ) : (
             <span className="ccc-photo__empty ccc-meta">Photo</span>
           )}
-          <span aria-hidden="true" className="ccc-photo__tint" />
         </div>
         <figcaption className="mt-4 flex flex-col gap-1">
           <span className="text-ui font-semibold text-ink">{C.name}</span>

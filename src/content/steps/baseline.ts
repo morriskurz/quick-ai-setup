@@ -12,19 +12,18 @@ export const baselineSteps: Step[] = [
   {
     id: 'powershell-scripts',
     title: 'Allow PowerShell to run installed tools',
-    why: 'Windows blocks every PowerShell script file until you change one setting, and tools installed through Node (npx, the skills CLI, agent-browser, gws) start through such script files. RemoteSigned for your own user account is the setting Microsoft documents: scripts downloaded from the internet still need a signature.',
+    why: 'Windows blocks PowerShell scripts by default; tools installed through Node need them.',
     kind: 'human',
     commands: {
       windows: [
         {
           run: 'Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser',
-          note: 'Changes a security setting for your user account only. Run it yourself and answer the question with Y.',
+          note: 'Your user account only. Scripts downloaded from the internet still need a signature.',
         },
       ],
     },
     human: {
-      instructions:
-        'Open PowerShell (not as administrator) and run the command shown. It asks for confirmation; answer Y. You can check the result with Get-ExecutionPolicy -List.',
+      instructions: 'Open PowerShell (not as administrator), run the command and answer Y.',
     },
     docsUrl:
       'https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies',
@@ -32,7 +31,7 @@ export const baselineSteps: Step[] = [
   {
     id: 'homebrew',
     title: 'Install Homebrew',
-    why: 'Homebrew is the package manager most macOS tools are installed with. Several steps below use it.',
+    why: 'The macOS package manager that several steps below use.',
     kind: 'human',
     commands: {
       macos: [
@@ -46,8 +45,12 @@ export const baselineSteps: Step[] = [
       ],
     },
     human: {
-      instructions:
-        'Skip this if `brew --version` already prints a version. Otherwise run the command in Terminal yourself. It asks for your Mac password and may install Apple’s command line tools. At the end it prints “Next steps”: run those lines too, they put brew on your PATH. Then open a new Terminal window.',
+      instructions: [
+        'Skip this if `brew --version` prints a version.',
+        '1. Run the command in Terminal yourself and enter your Mac password.',
+        '2. Run the lines it prints under “Next steps”. They put brew on your PATH.',
+        '3. Open a new Terminal window.',
+      ].join('\n'),
       url: 'https://brew.sh',
     },
     docsUrl: 'https://brew.sh',
@@ -55,7 +58,7 @@ export const baselineSteps: Step[] = [
   {
     id: 'git',
     title: 'Install Git',
-    why: 'Git keeps every version of every file in a folder and lets you go back to any of them. The agent uses it to undo its own mistakes, and you can use it for documents, not only code.',
+    why: 'Keeps every version of every file, so the agent can undo its mistakes.',
     kind: 'command',
     commands: {
       windows: [
@@ -72,7 +75,7 @@ export const baselineSteps: Step[] = [
   {
     id: 'node',
     title: 'Install Node.js LTS',
-    why: 'Most tools on this page, including every skill, are installed through Node. LTS is the long-term support line: it gets security fixes for years, not months.',
+    why: 'Most tools here install through Node; LTS gets security fixes for years.',
     kind: 'command',
     commands: {
       windows: [
@@ -83,12 +86,12 @@ export const baselineSteps: Step[] = [
       ],
       macos: [
         { run: `curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/${NVM_VERSION}/install.sh | bash` },
-        { run: '\\. "$HOME/.nvm/nvm.sh"', note: 'Loads nvm in this window, instead of opening a new one.' },
+        { run: '\\. "$HOME/.nvm/nvm.sh"', note: 'Loads nvm in this window.' },
         { run: 'nvm install --lts' },
       ],
       linux: [
         { run: `curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/${NVM_VERSION}/install.sh | bash` },
-        { run: '\\. "$HOME/.nvm/nvm.sh"', note: 'Loads nvm in this window, instead of opening a new one.' },
+        { run: '\\. "$HOME/.nvm/nvm.sh"', note: 'Loads nvm in this window.' },
         { run: 'nvm install --lts' },
       ],
     },
@@ -97,7 +100,7 @@ export const baselineSteps: Step[] = [
   {
     id: 'context7',
     title: 'Connect Context7',
-    why: 'Coding agents learn from old documentation and sometimes call functions that no longer exist. Context7 gives them the current documentation of whatever library they use, which removes a large share of that guessing.',
+    why: 'Gives the agent current library docs instead of outdated memory.',
     kind: 'human',
     commands: {
       windows: [{ run: (ctx) => ctx7Command(ctx) }],
@@ -106,17 +109,16 @@ export const baselineSteps: Step[] = [
     },
     human: {
       instructions:
-        'Run the command in your own terminal. It shows a short code and waits: press Enter, sign in on context7.com in the browser that opens, and confirm the code. Setup then creates a free personal key and stores it in your agent’s settings. You do not copy or paste any key.',
+        'Run the command in your own terminal. Press Enter, sign in on context7.com in the browser and confirm the code. The key is stored for you; paste nothing.',
       url: 'https://context7.com',
     },
     docsUrl: 'https://github.com/upstash/context7#installation',
-    warning:
-      'Needs a free sign-in at context7.com. The ctx7 command-line tool also sends anonymous usage events; set CTX7_TELEMETRY_DISABLED=1 to switch them off.',
+    warning: 'Needs a free context7.com sign-in; ctx7 sends anonymous usage events unless you set CTX7_TELEMETRY_DISABLED=1.',
   },
   {
     id: 'grill-me',
     title: 'Add the grill-me skill',
-    why: 'Before anything gets built, the agent interviews you until it understands what you want. Getting requirements right is still the hardest part of any project, with or without AI. Start a request with “grill me” to use it.',
+    why: 'The agent interviews you before it builds; start a request with “grill me”.',
     kind: 'command',
     commands: {
       windows: [{ run: skillsAdd('vechain/vechain-ai-skills', ['grill-me']) }],

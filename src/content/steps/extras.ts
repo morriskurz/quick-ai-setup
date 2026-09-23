@@ -15,13 +15,15 @@ export const HOUSE_RULES_STEP_ID = 'house-rules';
 export const VERIFY_STEP_ID = 'verify';
 export const BACKUP_STEP_ID = 'backup-instructions';
 
-const BACKUP_NOTE = 'Makes a dated copy of each file that exists and never overwrites an earlier copy.';
+const BACKUP_NOTE = 'Never overwrites an earlier copy.';
+
+const RTK_INIT_NOTE = 'May ask to share usage statistics. Only you answer; an agent stops and asks you.';
 
 export const extraSteps: Step[] = [
   {
     id: 'rtk',
     title: 'Install RTK',
-    why: 'Commands such as test runs and file listings print a lot of text. RTK shortens that output before the agent reads it, which saves usage on long sessions.',
+    why: 'Shortens command output before the agent reads it, which saves usage.',
     kind: 'command',
     commands: {
       windows: [{ run: 'winget install rtk-ai.rtk' }],
@@ -29,26 +31,24 @@ export const extraSteps: Step[] = [
       linux: [{ run: 'curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh' }],
     },
     docsUrl: 'https://github.com/rtk-ai/rtk#installation',
-    warning:
-      'RTK has optional usage statistics (telemetry). According to its telemetry documentation they are off by default and only sent if you agree when `rtk init` asks. Check with `rtk telemetry status`, switch off with `rtk telemetry disable`, or block completely with the environment variable RTK_TELEMETRY_DISABLED=1. Details: ' +
-      RTK_TELEMETRY_DOCS,
+    warning: `Telemetry is off unless you agree when \`rtk init\` asks: check with \`rtk telemetry status\`, switch off with \`rtk telemetry disable\`, block with RTK_TELEMETRY_DISABLED=1 (${RTK_TELEMETRY_DOCS}).`,
   },
   {
     id: 'rtk-init-claude-code',
     title: 'Connect RTK to Claude Code',
-    why: 'Installs RTK’s hook, so Claude Code’s shell commands are shortened automatically. Restart Claude Code afterwards.',
+    why: 'Installs RTK’s Claude Code hook; restart Claude Code afterwards.',
     kind: 'command',
     agents: ['claude-code'],
-    commands: all([{ run: 'rtk init -g', note: 'May ask whether to share anonymous usage statistics. Only you answer that question: an agent stops and asks you.' }]),
+    commands: all([{ run: 'rtk init -g', note: RTK_INIT_NOTE }]),
     docsUrl: RTK_AGENTS_DOCS,
   },
   {
     id: 'rtk-init-codex',
     title: 'Connect RTK to Codex',
-    why: 'Installs RTK’s hook for Codex, so its shell commands are shortened automatically. Restart Codex afterwards.',
+    why: 'Installs RTK’s Codex hook; restart Codex afterwards.',
     kind: 'command',
     agents: ['codex'],
-    commands: all([{ run: 'rtk init -g --codex', note: 'May ask whether to share anonymous usage statistics. Only you answer that question: an agent stops and asks you.' }]),
+    commands: all([{ run: 'rtk init -g --codex', note: RTK_INIT_NOTE }]),
     docsUrl: RTK_AGENTS_DOCS,
   },
   {
@@ -58,18 +58,18 @@ export const extraSteps: Step[] = [
     // The source says otherwise: main.rs sets install_claude = !opencode, and init.rs then runs
     // run_opencode_only_mode, which writes only ~/.config/opencode/plugins/rtk.ts (checked at
     // tag v0.49.0 and at HEAD b748a5f, 2026-09-23). The help text is misleading.
-    why: 'Installs RTK’s OpenCode plugin, so its shell commands are shortened automatically. It installs only the OpenCode plugin, no Claude Code hook. Restart OpenCode afterwards.',
+    why: 'Installs only RTK’s OpenCode plugin, no Claude Code hook; restart OpenCode afterwards.',
     kind: 'command',
     agents: ['opencode'],
     commands: all([
-      { run: 'rtk init -g --opencode', note: 'May ask whether to share anonymous usage statistics. Only you answer that question: an agent stops and asks you.' },
+      { run: 'rtk init -g --opencode', note: RTK_INIT_NOTE },
     ]),
     docsUrl: RTK_AGENTS_DOCS,
   },
   {
     id: 'caveman',
     title: 'Add the Caveman skill',
-    why: 'Shorter answers mean less reading and lower usage. Code, commands and error messages stay unchanged; only the prose around them is shortened. Say “stop caveman” to switch it off in a session.',
+    why: 'Shortens prose around code, commands and errors; “stop caveman” switches it off.',
     kind: 'command',
     commands: all([{ run: skillsAdd('JuliusBrussee/caveman', ['caveman']) }]),
     docsUrl: 'https://github.com/JuliusBrussee/caveman#small-rock-the-skill',
@@ -79,7 +79,7 @@ export const extraSteps: Step[] = [
   {
     id: BACKUP_STEP_ID,
     title: 'Back up your agents’ instruction files',
-    why: 'Some installers on this page add lines to these files (Context7 and RTK do). A dated copy made before anything else runs keeps the files exactly as you had them. On a new computer there is nothing to copy yet.',
+    why: 'Context7 and RTK edit these files, so a dated copy comes first.',
     kind: 'command',
     commands: {
       windows: [{ run: (ctx) => backupCommand(ctx, 'windows'), note: BACKUP_NOTE }],
@@ -91,20 +91,19 @@ export const extraSteps: Step[] = [
   {
     id: HOUSE_RULES_STEP_ID,
     title: 'Write the house rules file',
-    why: 'A short file of rules the agent reads at the start of every session: check your work, run what you wrote, say what you assumed. You write it once instead of repeating it every time.',
+    why: 'Rules the agent reads every session: check work, run what you wrote, state assumptions.',
     // 'human' for the manual path (you paste the rules). In the prompt path the agent
     // writes the file; buildAgentPrompt handles this step specially.
     kind: 'human',
     human: {
-      instructions:
-        'Open each agent’s instruction file in a text editor and add the house rules shown on this page at the end. Keep what is already there; the backup from the first step has the original.',
+      instructions: 'Add the house rules below to the end of each agent’s instruction file. Keep what is already there.',
     },
     docsUrl: 'https://code.claude.com/docs/en/memory',
   },
   {
     id: VERIFY_STEP_ID,
     title: 'Check the setup',
-    why: 'One script prints the version of every tool you picked, or “not installed”. It reads only and changes nothing.',
+    why: 'Prints each tool’s version or “not installed”; changes nothing.',
     kind: 'command',
     docsUrl: 'https://github.com/morriskurz/quick-ai-setup',
   },
@@ -136,17 +135,15 @@ export const extras: Extra[] = [
   {
     id: 'rtk',
     label: 'RTK: shorter tool output',
-    summary: 'Compresses the output of commands the agent runs, so more work fits into one session.',
-    warning:
-      'Compression makes mistakes harder to spot: you see less of what the agent saw. Add it after a few weeks, once you know what normal output looks like. RTK has optional telemetry, off unless you agree to it.',
+    summary: 'Compresses command output so more work fits into one session.',
+    warning: 'You see less of what the agent saw; telemetry is optional and off unless you agree.',
     stepIds: ['rtk', 'rtk-init-claude-code', 'rtk-init-codex', 'rtk-init-opencode'],
   },
   {
     id: 'caveman',
     label: 'Caveman: shorter answers',
-    summary: 'Makes the agent answer in terse fragments. Faster to read once you are used to it, harder before.',
-    warning:
-      'Compression makes mistakes harder to spot: you see less of the agent’s reasoning. Add it after a few weeks, not on day one.',
+    summary: 'Terse answers: faster to read once you are used to them.',
+    warning: 'You see less of the agent’s reasoning.',
     stepIds: ['caveman'],
   },
 ];

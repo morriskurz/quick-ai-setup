@@ -301,7 +301,7 @@ describe('regressions found in verification', () => {
   it('never tells the agent to answer the RTK telemetry question itself', () => {
     const prompt = buildAgentPrompt(sel({ agents: ALL_AGENTS, extras: ['rtk'] }));
     expect(prompt).not.toContain('Answer yourself');
-    expect(prompt).toContain('Only you answer that question: an agent stops and asks you.');
+    expect(prompt).toContain('Only you answer; an agent stops and asks you.');
   });
 
   it('every section headline is two sentences with full stops, never a question (brand rule)', () => {

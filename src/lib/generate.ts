@@ -100,25 +100,25 @@ export function buildAgentPrompt(input: Selection): string {
   const extraLabels = labelsOf(extras, selection.extras);
 
   const rules = [
-    'Work through the steps below in order. Use only the commands given. Skip a step when its tool is already installed (check with --version first) and tell me you skipped it. You are one of the agents listed above: skip installing and signing in to yourself.',
+    'Do the steps below in order, using only the commands given. Skip a step whose tool is already installed (check --version first) and tell me. You are one of the agents listed above: skip installing and signing in to yourself.',
     'Before every command, show it and say in one sentence what it does. Then run it.',
-    'If a command fails, explain the error in plain words and suggest a fix. Do not switch to a different installer on your own.',
-    'Never type, ask for or store passwords, tokens, keys or one-time codes. Never paste them into this chat, and tell me not to either.',
-    'When a step says STOP, stop. Tell me exactly what to do, then wait until I reply "done" before you continue.',
-    'Never run a command that uses sudo or needs administrator rights yourself. Show it to me, STOP, and ask me to run it in my own terminal.',
+    'If a command fails, explain the error in plain words and suggest a fix. Never switch to a different installer on your own.',
+    'Never type, ask for or store passwords, tokens, keys or one-time codes, and never paste them into this chat. Tell me not to either.',
+    'When a step says STOP, stop. Tell me exactly what to do and wait until I reply "done".',
+    'Never run sudo or administrator commands yourself. Show them to me, STOP, and ask me to run them in my own terminal.',
     'If a command waits for input you cannot give, stop it and ask me.',
-    'Do not delete files and do not change settings beyond what a step says.',
+    'Do not delete files or change settings beyond what a step says.',
   ];
   if (selection.os === 'windows') {
     rules.push(
       "After each install, refresh PATH in your shell before the next step: $env:Path = [Environment]::GetEnvironmentVariable('Path','Machine') + ';' + [Environment]::GetEnvironmentVariable('Path','User')",
     );
   } else {
-    rules.push('After each install, if a new command is not found, load the shell profile again or ask me to open a new terminal.');
+    rules.push('If a newly installed command is not found, reload the shell profile or ask me to open a new terminal.');
   }
 
   const lines: string[] = [
-    'You are setting up this computer for AI-assisted work. I am not a developer, so explain in plain language.',
+    'You are setting up this computer for AI-assisted work. I am not a developer: explain in plain language.',
     '',
     'About me',
     `- System: ${OS_LABEL[selection.os]}`,
@@ -141,7 +141,7 @@ export function buildAgentPrompt(input: Selection): string {
     if (step.id === VERIFY_STEP_ID) {
       lines.push(
         `${n}. ${step.title}`,
-        indent('Run this check in a fresh shell (paste it in; do not save it as a file) and show me the full output:'),
+        indent('Paste this check into a fresh shell (do not save it as a file) and show me the full output:'),
         indent(fence(buildVerifyScript(selection), shellLang)),
         '',
       );
@@ -158,7 +158,7 @@ export function buildAgentPrompt(input: Selection): string {
         lines.push(indent(fence(cmds.map((c) => renderCommand(c, ctx)).join('\n'), shellLang)));
       }
       if (step.warning) lines.push(indent(`Tell me first: ${step.warning}`));
-      lines.push(indent('Wait until I say "done" before continuing.'), '');
+      lines.push(indent('Wait until I say "done".'), '');
       return;
     }
 
@@ -167,7 +167,7 @@ export function buildAgentPrompt(input: Selection): string {
     for (const c of cmds) {
       const text = renderCommand(c, ctx);
       if (needsAdmin(c, ctx)) {
-        lines.push(indent('STOP: this needs administrator rights. Show me the command, ask me to run it myself, and wait until I say "done":'));
+        lines.push(indent('STOP: this needs administrator rights. Show me the command, ask me to run it, and wait until I say "done":'));
       }
       lines.push(indent(fence(text, shellLang)));
       if (c.note && !c.note.startsWith(ADMIN_NOTE_PREFIX)) lines.push(indent(`(${c.note})`));
@@ -179,7 +179,7 @@ export function buildAgentPrompt(input: Selection): string {
   const projectFiles = selection.agents.includes('claude-code') ? 'AGENTS.md and CLAUDE.md' : 'AGENTS.md';
   lines.push(
     'Finish',
-    '- Give me a short summary: what was installed (with versions), what was skipped, what failed, and which steps I still have to do myself.',
+    '- Summarise briefly: what was installed (with versions), skipped or failed, and which steps I still have to do myself.',
     `- Then show me this template and tell me to copy it into every new project as ${projectFiles}:`,
     fence(project.trimEnd(), 'markdown'),
   );
@@ -201,8 +201,8 @@ function houseRulesPromptLines(n: number, selection: Selection): string[] {
     indent(
       [
         'For each file:',
-        '- The originals were backed up in the first step. Do not make another backup now: it would copy the file after installers changed it.',
-        '- Merge: keep everything already in the file and add the rules below at the end. Leave out any rule that is already there in other words.',
+        '- The first step made the backup. Do not make another: installers have changed the file since.',
+        '- Merge: keep everything in the file and add the rules below at the end, leaving out any rule it already states in other words.',
         '- If it does not exist, create it (and its folder) with the rules below.',
         '- Show me the final file before saving it.',
       ].join('\n'),

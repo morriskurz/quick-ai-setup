@@ -128,12 +128,8 @@ The still PNG motifs are not available in this repo; the live scene is the motif
 6. **Prose link underline** — `.ccc-link` keeps a persistent cyan-35 hairline underline so links are not told apart by colour alone (WCAG 1.4.1). Hover changes colour only, as the brand requires.
 7. **Mobile bottom sheet** — ground-coloured bar with a hairline top border, `env(safe-area-inset-bottom)` padding, expands upward to show the prompt. Collapsed content is `inert`; Escape closes it.
 8. **Phone composition for the motif** — below a 0.75 canvas aspect the source auto-fit pushes the stack off screen, so it sits smaller at the top right (`scale 0.42, x 0.75, y +1.5`), at 50 % opacity with a downward mask, behind the copy.
-9. **Photography (consulting section)** — the brand's first photographic surface. Readme, Imagery: a photo "must be graded cool and dark and sit under the same vignette + grain". `.ccc-photo` applies this to any image automatically:
-   - `filter: grayscale(1) brightness(0.74) contrast(1.12)` on the image,
-   - a `--ccc-cyan` layer with `mix-blend-mode: color` at 0.26 opacity (tints without a haze),
-   - the radial vignette `radial-gradient(118% 84% at 50% 40%, transparent 42%, rgba(1,8,8,0.72) 100%)` plus a light foot darkening,
-   - 5 % overlay grain (`--ccc-grain`).
-   Frame: hairline, 10px radius, no circle crop, no shadow; explicit width/height and `loading="lazy"`. Tuned against the owner's portrait so the face stays clearly recognisable.
+9. **Photography (consulting section)** — the brand's first photographic surface. **Owner override:** the brand readme (Imagery) says a photo "must be graded cool and dark and sit under the same vignette + grain"; the owner chose natural colour for his portrait instead. `.ccc-photo` therefore applies no filter, no cyan colour-blend tint, no vignette and no grain.
+   Frame: hairline, 10px radius, no circle crop, no shadow; explicit width/height and `loading="lazy"`.
 10. **Mobile basics** — `100svh` hero, `dvh` for the sheet, inputs at 16px, tap highlight off, `touch-action: manipulation` on controls, `viewport-fit=cover`, `theme-color` `#010808`.
 
 ## Content boundary

@@ -43,7 +43,7 @@ export function ChooseSection({ selection, onToggleAgent, onSetOs }: ChooseSecti
         </div>
         {/* COPY: owner review. Live region is always mounted so screen readers announce the hint. */}
         <p role="status" className={showAgentHint ? 'mt-4 mb-0 text-nav text-ink-body' : 'm-0'}>
-          {showAgentHint ? 'Keep at least one agent selected. The commands need to know where to install skills.' : ''}
+          {showAgentHint ? 'Keep at least one agent selected.' : ''}
         </p>
       </fieldset>
 
@@ -66,7 +66,7 @@ export function ChooseSection({ selection, onToggleAgent, onSetOs }: ChooseSecti
           ))}
         </div>
         {/* COPY: owner review */}
-        <p className="mt-3 mb-0 text-nav text-ink-muted">We guessed this from your browser.</p>
+        <p className="mt-3 mb-0 text-nav text-ink-muted">Detected from your browser.</p>
       </fieldset>
     </Section>
   );

@@ -417,11 +417,10 @@
 }
 
 @layer components {
-  /* Addition: the brand's first photographic surface. Readme, Imagery: a photo
-     "must be graded cool and dark and sit under the same vignette + grain".
-     Any image placed in .ccc-photo gets it: greyscale + darkened grade, a cyan
-     tint (colour blend), the radial vignette and 5% overlay grain. 10px radius,
-     hairline, no circle crop, no shadow. */
+  /* Addition: the brand's first photographic surface. The owner chose natural
+     colour for his portrait, overriding the brand's photo grade (Readme,
+     Imagery): no filter, tint, vignette or grain. 10px radius, hairline, no
+     circle crop, no shadow. */
   .ccc-photo {
     position: relative;
     overflow: hidden;
@@ -437,36 +436,6 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    filter: grayscale(1) brightness(0.74) contrast(1.12);
-  }
-  /* Cyan grade: colour blend tints the greyscale image without a haze. */
-  .ccc-photo__tint {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background: var(--ccc-cyan);
-    mix-blend-mode: color;
-    opacity: 0.26;
-  }
-  /* Vignette (same radial as the motif stack) plus a slight darkening at the foot. */
-  .ccc-photo::before,
-  .ccc-photo::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-  }
-  .ccc-photo::before {
-    background:
-      radial-gradient(118% 84% at 50% 40%, transparent 42%, rgba(1, 8, 8, 0.72) 100%),
-      linear-gradient(180deg, transparent 55%, rgba(1, 8, 8, 0.35));
-    z-index: 1;
-  }
-  .ccc-photo::after {
-    background-image: var(--ccc-grain);
-    opacity: var(--ccc-grain-opacity);
-    mix-blend-mode: overlay;
-    z-index: 2;
   }
   .ccc-photo__empty {
     position: absolute;
