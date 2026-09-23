@@ -29,3 +29,6 @@ dist-ssr
 # creativecodecampus design-system source: content rights reserved.
 # The site uses ported copies under src/.
 design-system/
+
+# Local Claude Code settings
+.claude/

@@ -1,6 +1,6 @@
 # quick-ai-setup — Specification
 
-Status: **awaiting approval**. Nothing is built or pushed until this document is approved.
+Status: **approved and implemented** (2026-09-23). Section 11 records corrections made during implementation.
 Date: 2026-09-23
 Owner: morriskurz / creativecodecampus
 
