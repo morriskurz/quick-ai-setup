@@ -1,12 +1,17 @@
 // House rules: the text written to AGENTS.md / CLAUDE.md.
-// GLOBAL_RULES is the owner's own global CLAUDE.md, verbatim (his choice, 2026-09-23).
+// GLOBAL_RULES_BODY is the owner's own global CLAUDE.md below its heading, verbatim (his choice,
+// 2026-09-23). CLAUDE.md keeps his heading; AGENTS.md files get a neutral one.
 // The @RTK.md import is left out: `rtk init` adds its own reference when RTK is ticked.
 // COPY: owner's file — change only when he changes his own.
 
 import type { GoalId, Selection } from './types';
 
-export const GLOBAL_RULES = `# CLAUDE.md — Working Rules
+/** First line of the global file: the owner's own heading in CLAUDE.md, a neutral one in AGENTS.md. */
+export const CLAUDE_MD_HEADING = '# CLAUDE.md — Working Rules';
+export const AGENTS_MD_HEADING = '# Working Rules';
 
+/** The owner's file below its heading, verbatim. */
+export const GLOBAL_RULES_BODY = `
 ## Workflow Rules
 - **Always run/execute code after making changes** — don't just syntax-check; actually run the script to verify it works end-to-end, so errors can be caught and fixed immediately
 - **Reread your task plan** and **reread the relevant files to the task** before continuing

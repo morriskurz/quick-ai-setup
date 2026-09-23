@@ -249,6 +249,15 @@ describe('buildAgentsMd', () => {
     expect(global).not.toMatch(/RTK/);
   });
 
+  it('AGENTS.md gets a neutral heading instead of the CLAUDE.md one', () => {
+    const codexOnly = buildAgentsMd(sel({ agents: ['codex', 'opencode'] })).global;
+    expect(codexOnly.startsWith('# Working Rules\n')).toBe(true);
+    expect(codexOnly).not.toContain('CLAUDE.md');
+    const mixedPrompt = buildAgentPrompt(sel({ agents: ['claude-code', 'codex'] }));
+    expect(mixedPrompt).toContain('In AGENTS.md files, the first line is "# Working Rules"');
+    expect(buildAgentPrompt(sel())).not.toContain('In AGENTS.md files');
+  });
+
   it('adds the RTK rule only when RTK is selected', () => {
     expect(buildAgentsMd(sel({ extras: ['rtk'] })).global).toContain('rtk proxy');
     expect(buildAgentsMd(sel({ extras: ['caveman'] })).global).not.toContain('rtk');

@@ -14,7 +14,7 @@ import {
   steps,
   VERIFY_STEP_ID,
 } from '../content';
-import { GLOBAL_RULES, PROJECT_EMPTY, PROJECT_FRAGMENTS, PROJECT_HEADER, RTK_RULE } from '../content/rules';
+import { AGENTS_MD_HEADING, CLAUDE_MD_HEADING, GLOBAL_RULES_BODY, PROJECT_EMPTY, PROJECT_FRAGMENTS, PROJECT_HEADER, RTK_RULE } from '../content/rules';
 import type { Command, CommandContext, OsId, Selection, SetupPlan, Step } from '../content/types';
 import { versionChecks, type VersionCheck } from '../content/verify';
 
@@ -195,6 +195,7 @@ function houseRulesPromptLines(n: number, selection: Selection): string[] {
       return `- ${a.label}: ${selection.os === 'windows' ? f.windows : f.posix}`;
     });
   const { global } = buildAgentsMd(selection);
+  const mixed = selection.agents.includes('claude-code') && selection.agents.some((a) => a !== 'claude-code');
   return [
     `${n}. Write the house rules into each agent's global instruction file:`,
     indent(files.join('\n')),
@@ -204,6 +205,7 @@ function houseRulesPromptLines(n: number, selection: Selection): string[] {
         '- The first step made the backup. Do not make another: installers have changed the file since.',
         '- Merge: keep everything in the file and add the rules below at the end, leaving out any rule it already states in other words.',
         '- If it does not exist, create it (and its folder) with the rules below.',
+        ...(mixed ? [`- In AGENTS.md files, the first line is "${AGENTS_MD_HEADING}" instead of "${CLAUDE_MD_HEADING}".`] : []),
         '- Show me the final file before saving it.',
       ].join('\n'),
     ),
@@ -216,7 +218,9 @@ function houseRulesPromptLines(n: number, selection: Selection): string[] {
 /** AGENTS.md / CLAUDE.md content: global baseline and per-project template. */
 export function buildAgentsMd(input: Selection): { global: string; project: string } {
   const selection = withAgents(input);
-  const global = GLOBAL_RULES + (selection.extras.includes('rtk') ? RTK_RULE : '');
+  // CLAUDE.md keeps the owner's heading; AGENTS.md (Codex, OpenCode) gets a neutral one.
+  const heading = selection.agents.includes('claude-code') ? CLAUDE_MD_HEADING : AGENTS_MD_HEADING;
+  const global = heading + '\n' + GLOBAL_RULES_BODY + (selection.extras.includes('rtk') ? RTK_RULE : '');
   const fragments = goals.filter((g) => selection.goals.includes(g.id)).map((g) => PROJECT_FRAGMENTS[g.id](selection));
   const project = PROJECT_HEADER + (fragments.length ? fragments.join('') : PROJECT_EMPTY);
   return { global, project };
