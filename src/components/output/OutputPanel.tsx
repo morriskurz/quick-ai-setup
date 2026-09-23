@@ -1,6 +1,7 @@
 import { sectionCopy } from '../../content';
 import { EyebrowLabel, MetaRow } from '../ds';
 import { CopyButton } from '../ui/CopyButton';
+import { goToGetStarted } from '../ui/goToGetStarted';
 import { PromptView } from './PromptView';
 
 interface OutputPanelProps {
@@ -26,7 +27,7 @@ export function OutputPanel({ prompt, meta }: OutputPanelProps) {
         label="Generated prompt"
         className="min-h-[160px] flex-1 border-y border-hairline py-4"
       />
-      <CopyButton variant="primary" label={sectionCopy.setup.copyPromptCta} getText={() => prompt} className="w-full" />
+      <CopyButton variant="primary" label={sectionCopy.setup.copyPromptCta} getText={() => prompt} onCopied={goToGetStarted} className="w-full" />
     </section>
   );
 }

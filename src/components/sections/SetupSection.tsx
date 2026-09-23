@@ -2,6 +2,7 @@ import { sectionCopy } from '../../content';
 import type { OsId, Selection, SetupPlan } from '../../content/types';
 import { MetaRow } from '../ds';
 import { CopyButton } from '../ui/CopyButton';
+import { goToGetStarted } from '../ui/goToGetStarted';
 import { OS_LABEL, tabId } from '../ui/os';
 import { OsTabs } from '../ui/OsTabs';
 import { Section } from '../ui/Section';
@@ -27,7 +28,7 @@ export function SetupSection({ selection, plan, prompt, verifyScript, onSetOs }:
         <h3 className="m-0 text-body font-semibold text-ink">Path one: copy the prompt</h3>
         <p className="m-0 max-w-measure text-ui leading-[1.65] text-ink-body">{sectionCopy.agent.installNote}</p>
         <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
-          <CopyButton variant="primary" label={copy.copyPromptCta} getText={() => prompt} />
+          <CopyButton variant="primary" label={copy.copyPromptCta} getText={() => prompt} onCopied={goToGetStarted} />
           <MetaRow items={[`${plan.steps.length} steps`, OS_LABEL[selection.os]]} />
         </div>
       </div>

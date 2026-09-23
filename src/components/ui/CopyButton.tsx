@@ -10,13 +10,15 @@ interface CopyButtonProps {
   variant?: ButtonVariant;
   small?: boolean;
   className?: string;
+  /** Runs after a successful copy. */
+  onCopied?: () => void;
 }
 
 /**
  * Copy button. Swaps its label to "Copied" for ~1.6s (no icon), and announces
  * the result through a polite live region.
  */
-export function CopyButton({ getText, label, ariaLabel, variant = 'ghost', small = false, className }: CopyButtonProps) {
+export function CopyButton({ getText, label, ariaLabel, variant = 'ghost', small = false, className, onCopied }: CopyButtonProps) {
   const { copied, failed, copy } = useCopy();
   const visible = copied ? 'Copied' : failed ? 'Copy failed' : label;
   return (
@@ -26,7 +28,7 @@ export function CopyButton({ getText, label, ariaLabel, variant = 'ghost', small
         small={small}
         className={className}
         aria-label={copied || failed ? undefined : ariaLabel}
-        onClick={() => void copy(getText())}
+        onClick={() => void copy(getText()).then((ok) => ok && onCopied?.())}
       >
         {visible}
       </Button>
