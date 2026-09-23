@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   agentLoginStepIds,
+  BACKUP_STEP_ID,
   agents,
   baselineStepIds,
   extras,
@@ -194,7 +195,8 @@ describe('buildAgentPrompt', () => {
     for (const os of OSES) {
       const s = sel({ os, agents: ALL_AGENTS, goals: ALL_GOALS, extras: ALL_EXTRAS });
       const prompt = buildAgentPrompt(s);
-      const humans = resolvePlan(s).steps.filter((st) => st.kind === 'human');
+      // The house-rules step is 'human' for the manual path; in the prompt the agent writes it.
+      const humans = resolvePlan(s).steps.filter((st) => st.kind === 'human' && st.id !== HOUSE_RULES_STEP_ID);
       expect(humans.length).toBeGreaterThan(3);
       for (const h of humans) expect(prompt, `${os}:${h.id}`).toContain(`${h.title} — STOP`);
     }
@@ -318,5 +320,62 @@ describe('regressions found in verification', () => {
       expect(lead.endsWith('.'), t).toBe(true);
       expect(gradient?.endsWith('.'), t).toBe(true);
     }
+  });
+});
+
+describe('regressions from the second verification pass', () => {
+  it('backs up every selected global instruction file before anything can modify it', () => {
+    for (const os of OSES) {
+      const s = sel({ os, agents: ALL_AGENTS, goals: ALL_GOALS, extras: ALL_EXTRAS });
+      expect(ids(s)[0]).toBe(BACKUP_STEP_ID);
+      const prompt = buildAgentPrompt(s);
+      const backup = prompt.indexOf('Back up your agents’ instruction files');
+      expect(backup).toBeGreaterThan(-1);
+      for (const marker of ['ctx7 setup', 'rtk init', 'JuliusBrussee/caveman', 'Write the house rules']) {
+        expect(prompt.indexOf(marker), `${os}:${marker}`).toBeGreaterThan(backup);
+      }
+      const backupCmd = renderCommand(steps[BACKUP_STEP_ID].commands![os]![0], { agents: ALL_AGENTS, os });
+      for (const p of os === 'windows' ? ['.claude\\CLAUDE.md', '.codex\\AGENTS.md', '.config\\opencode\\AGENTS.md'] : ['.claude/CLAUDE.md', '.codex/AGENTS.md', '.config/opencode/AGENTS.md']) {
+        expect(backupCmd, `${os}:${p}`).toContain(p);
+      }
+    }
+  });
+
+  it('backup never overwrites an earlier backup', () => {
+    const linux = renderCommand(steps[BACKUP_STEP_ID].commands!.linux![0], { agents: ['codex'], os: 'linux' });
+    expect(linux).toContain('[ ! -e');
+    expect(linux).not.toContain('CLAUDE.md');
+    const win = renderCommand(steps[BACKUP_STEP_ID].commands!.windows![0], { agents: ['codex'], os: 'windows' });
+    expect(win).toContain('-not (Test-Path');
+  });
+
+  it('falls back to Claude Code when no agent is selected', () => {
+    const empty = sel({ agents: [], goals: ['existing-programs'] });
+    const prompt = buildAgentPrompt(empty);
+    expect(prompt).toContain('Coding agents I use: Claude Code');
+    expect(prompt).toContain('-a claude-code');
+    expect(prompt).not.toMatch(/npx skills add \S+( --skill \S+)* -g -y/);
+    expect(ids(empty)).toContain('install-claude-code');
+    expect(buildVerifyScript(empty)).toContain('claude --version');
+  });
+
+  it('the document walkthrough can be done where it appears', () => {
+    const step = steps['docs-walkthrough'];
+    expect(step.human?.instructions).not.toMatch(/after the setup/i);
+    expect(step.commands?.linux?.map((c) => c.run)).toEqual(['git init', 'git add .', 'git commit -m "Starting point"']);
+    const order = ids(sel({ goals: ['docs-versioning'] }));
+    expect(order.indexOf('git-identity')).toBeLessThan(order.indexOf('docs-walkthrough'));
+  });
+
+  it('the Python check cannot download Python', () => {
+    for (const os of OSES) {
+      const script = buildVerifyScript(sel({ os, goals: ['data-pipelines'] }));
+      expect(script).toContain('--no-python-downloads');
+      expect(script).not.toMatch(/uv'? .*'?run'?/);
+    }
+  });
+
+  it('RTK for OpenCode says it installs only the OpenCode plugin', () => {
+    expect(steps['rtk-init-opencode'].why).toContain('no Claude Code hook');
   });
 });

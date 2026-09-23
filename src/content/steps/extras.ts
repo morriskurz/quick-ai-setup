@@ -13,6 +13,9 @@ const RTK_AGENTS_DOCS = 'https://github.com/rtk-ai/rtk/blob/master/docs/guide/ge
 
 export const HOUSE_RULES_STEP_ID = 'house-rules';
 export const VERIFY_STEP_ID = 'verify';
+export const BACKUP_STEP_ID = 'backup-instructions';
+
+const BACKUP_NOTE = 'Makes a dated copy of each file that exists and never overwrites an earlier copy.';
 
 export const extraSteps: Step[] = [
   {
@@ -51,7 +54,11 @@ export const extraSteps: Step[] = [
   {
     id: 'rtk-init-opencode',
     title: 'Connect RTK to OpenCode',
-    why: 'Installs RTK’s OpenCode plugin, so its shell commands are shortened automatically. Restart OpenCode afterwards.',
+    // `rtk init --help` (0.49.0) says "--opencode: Install OpenCode plugin (in addition to Claude Code)".
+    // The source says otherwise: main.rs sets install_claude = !opencode, and init.rs then runs
+    // run_opencode_only_mode, which writes only ~/.config/opencode/plugins/rtk.ts (checked at
+    // tag v0.49.0 and at HEAD b748a5f, 2026-09-23). The help text is misleading.
+    why: 'Installs RTK’s OpenCode plugin, so its shell commands are shortened automatically. It installs only the OpenCode plugin, no Claude Code hook. Restart OpenCode afterwards.',
     kind: 'command',
     agents: ['opencode'],
     commands: all([
@@ -70,18 +77,27 @@ export const extraSteps: Step[] = [
 
   // ── Closing steps ─────────────────────────────────────────────────────────
   {
+    id: BACKUP_STEP_ID,
+    title: 'Back up your agents’ instruction files',
+    why: 'Some installers on this page add lines to these files (Context7 and RTK do). A dated copy made before anything else runs keeps the files exactly as you had them. On a new computer there is nothing to copy yet.',
+    kind: 'command',
+    commands: {
+      windows: [{ run: (ctx) => backupCommand(ctx, 'windows'), note: BACKUP_NOTE }],
+      macos: [{ run: (ctx) => backupCommand(ctx, 'macos'), note: BACKUP_NOTE }],
+      linux: [{ run: (ctx) => backupCommand(ctx, 'linux'), note: BACKUP_NOTE }],
+    },
+    docsUrl: 'https://code.claude.com/docs/en/memory',
+  },
+  {
     id: HOUSE_RULES_STEP_ID,
     title: 'Write the house rules file',
     why: 'A short file of rules the agent reads at the start of every session: check your work, run what you wrote, say what you assumed. You write it once instead of repeating it every time.',
-    kind: 'command',
-    commands: {
-      windows: [{ run: (ctx) => backupCommand(ctx, 'windows'), note: 'Makes a dated backup of any existing file first.' }],
-      macos: [{ run: (ctx) => backupCommand(ctx, 'macos'), note: 'Makes a dated backup of any existing file first.' }],
-      linux: [{ run: (ctx) => backupCommand(ctx, 'linux'), note: 'Makes a dated backup of any existing file first.' }],
-    },
+    // 'human' for the manual path (you paste the rules). In the prompt path the agent
+    // writes the file; buildAgentPrompt handles this step specially.
+    kind: 'human',
     human: {
       instructions:
-        'After the backup, open each file in a text editor and add the house rules shown on this page at the end. Keep what was already there.',
+        'Open each agent’s instruction file in a text editor and add the house rules shown on this page at the end. Keep what is already there; the backup from the first step has the original.',
     },
     docsUrl: 'https://code.claude.com/docs/en/memory',
   },
@@ -94,21 +110,23 @@ export const extraSteps: Step[] = [
   },
 ];
 
-/** Back up each selected agent's global instruction file, if it exists. */
+/** Back up each selected agent's global instruction file, if it exists and has no backup from today. */
 function backupCommand(ctx: CommandContext, os: OsId): string {
   const files = selectedAgents(ctx).map((a) => globalInstructionFiles[a]);
   if (os === 'windows') {
     return files
       .map((f) => {
         const p = f.windows.replace('$env:USERPROFILE', '$HOME');
-        return `if (Test-Path "${p}") { Copy-Item "${p}" "${p}.backup-$(Get-Date -Format yyyy-MM-dd)" }`;
+        const b = `${p}.backup-$(Get-Date -Format yyyy-MM-dd)`;
+        return `if ((Test-Path "${p}") -and -not (Test-Path "${b}")) { Copy-Item "${p}" "${b}" }`;
       })
       .join('\n');
   }
   return files
     .map((f) => {
       const p = f.posix.replace('~', '"$HOME"');
-      return `if [ -f ${p} ]; then cp ${p} ${p}.backup-$(date +%F); fi`;
+      const b = `${p}.backup-$(date +%F)`;
+      return `if [ -f ${p} ] && [ ! -e ${b} ]; then cp ${p} ${b}; fi`;
     })
     .join('\n');
 }

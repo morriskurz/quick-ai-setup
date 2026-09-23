@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { agents, sectionCopy } from '../../content';
 import type { AgentId, OsId, Selection } from '../../content/types';
 import { OS_IDS } from '../../hooks/selectionStore';
@@ -15,6 +16,14 @@ const { agent: copy, os: osCopy } = sectionCopy;
 
 /** Step zero: which coding agent(s), and which computer. */
 export function ChooseSection({ selection, onToggleAgent, onSetOs }: ChooseSectionProps) {
+  // At least one agent stays selected: unticking the last one is refused and explained.
+  const [keptLast, setKeptLast] = useState(false);
+  const toggleAgent = (id: AgentId) => {
+    const isLast = selection.agents.length === 1 && selection.agents[0] === id;
+    setKeptLast(isLast);
+    if (!isLast) onToggleAgent(id);
+  };
+  const showAgentHint = keptLast || selection.agents.length === 0;
   return (
     <Section id="choose" eyebrow={copy.eyebrow} title={copy.title} intro={<p className="m-0">{copy.intro}</p>}>
       <fieldset className="m-0 min-w-0 border-0 p-0">
@@ -25,19 +34,17 @@ export function ChooseSection({ selection, onToggleAgent, onSetOs }: ChooseSecti
               key={a.id}
               id={`agent-${a.id}`}
               checked={selection.agents.includes(a.id)}
-              onChange={() => onToggleAgent(a.id)}
+              onChange={() => toggleAgent(a.id)}
               label={a.label}
               tag={a.recommended ? 'recommended' : undefined}
               summary={a.summary}
             />
           ))}
         </div>
-        {selection.agents.length === 0 && (
-          // COPY: owner review
-          <p role="status" className="mt-4 mb-0 text-nav text-ink-body">
-            Pick at least one agent. The commands need to know where to install skills.
-          </p>
-        )}
+        {/* COPY: owner review. Live region is always mounted so screen readers announce the hint. */}
+        <p role="status" className={showAgentHint ? 'mt-4 mb-0 text-nav text-ink-body' : 'm-0'}>
+          {showAgentHint ? 'Keep at least one agent selected. The commands need to know where to install skills.' : ''}
+        </p>
       </fieldset>
 
       <fieldset className="mt-12 min-w-0 border-0 p-0">

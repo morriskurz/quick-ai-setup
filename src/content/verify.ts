@@ -28,7 +28,11 @@ export const versionChecks: Record<string, VersionCheck[]> = {
     { label: 'Dart', bin: 'dart' },
   ],
   uv: [{ label: 'uv', bin: 'uv' }],
-  python: [{ label: 'Python (uv)', bin: 'uv', args: ['run', '--no-project', 'python', '--version'] }],
+  // `uv python find` only looks for an installed interpreter; --no-python-downloads rules out
+  // uv's automatic download (docs.astral.sh/uv/concepts/python-versions).
+  python: [
+    { label: 'Python', bin: 'uv', args: ['python', 'find', '--no-project', '--show-version', '--no-python-downloads'] },
+  ],
   'agent-browser': [{ label: 'agent-browser', bin: 'agent-browser' }],
   gws: [{ label: 'gws', bin: 'gws' }],
   gcloud: [{ label: 'gcloud', bin: 'gcloud' }],

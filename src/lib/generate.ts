@@ -33,7 +33,16 @@ const OS_LABEL: Record<OsId, string> = {
  * A step is dropped when it is restricted to agents the reader did not pick, or
  * when it has commands but none for the reader's OS (e.g. Homebrew on Windows).
  */
-export function resolvePlan(selection: Selection): SetupPlan {
+/** Default agent when a selection arrives with none (the picker prevents this; stay safe anyway). */
+export const FALLBACK_AGENT = 'claude-code' as const;
+
+/** A copy of the selection that always names at least one agent. */
+export function withAgents(selection: Selection): Selection {
+  return selection.agents.length ? selection : { ...selection, agents: [FALLBACK_AGENT] };
+}
+
+export function resolvePlan(input: Selection): SetupPlan {
+  const selection = withAgents(input);
   const pickedAgents = agents.filter((a) => selection.agents.includes(a.id));
   const ids = [
     ...baselineBeforeAgentIds,
@@ -82,7 +91,8 @@ const indent = (text: string, pad = '   ') =>
     .join('\n');
 
 /** The single copyable prompt for a coding agent. */
-export function buildAgentPrompt(selection: Selection): string {
+export function buildAgentPrompt(input: Selection): string {
+  const selection = withAgents(input);
   const plan = resolvePlan(selection);
   const ctx: CommandContext = { agents: selection.agents, os: selection.os };
   const shellLang = selection.os === 'windows' ? 'powershell' : 'bash';
@@ -191,7 +201,7 @@ function houseRulesPromptLines(n: number, selection: Selection): string[] {
     indent(
       [
         'For each file:',
-        '- If it exists, first copy it to the same name with ".backup-" and today\'s date appended, and tell me the backup path. Never overwrite without a backup.',
+        '- The originals were backed up in the first step. Do not make another backup now: it would copy the file after installers changed it.',
         '- Merge: keep everything already in the file and add the rules below at the end. Leave out any rule that is already there in other words.',
         '- If it does not exist, create it (and its folder) with the rules below.',
         '- Show me the final file before saving it.',
@@ -204,7 +214,8 @@ function houseRulesPromptLines(n: number, selection: Selection): string[] {
 // ── House rules ─────────────────────────────────────────────────────────────
 
 /** AGENTS.md / CLAUDE.md content: global baseline and per-project template. */
-export function buildAgentsMd(selection: Selection): { global: string; project: string } {
+export function buildAgentsMd(input: Selection): { global: string; project: string } {
+  const selection = withAgents(input);
   const global = GLOBAL_RULES + (selection.extras.includes('rtk') ? RTK_RULE : '');
   const fragments = goals.filter((g) => selection.goals.includes(g.id)).map((g) => PROJECT_FRAGMENTS[g.id](selection));
   const project = PROJECT_HEADER + (fragments.length ? fragments.join('') : PROJECT_EMPTY);
@@ -230,7 +241,8 @@ const shQuote = (s: string) => (/^[\w@%+=:,./-]+$/.test(s) ? s : `'${s.replace(/
 const psQuote = (s: string) => `'${s.replace(/'/g, "''")}'`;
 
 /** One script per OS that prints every installed version. */
-export function buildVerifyScript(selection: Selection): string {
+export function buildVerifyScript(input: Selection): string {
+  const selection = withAgents(input);
   const checks = selectedChecks(selection);
   return selection.os === 'windows' ? powershellVerify(checks) : bashVerify(checks);
 }

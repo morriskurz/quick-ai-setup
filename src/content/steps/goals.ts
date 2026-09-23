@@ -367,12 +367,13 @@ export const goalSteps: Step[] = [
   // ── Document versioning ───────────────────────────────────────────────────
   {
     id: 'docs-walkthrough',
-    title: 'Put your first folder of documents under version control',
+    title: 'Put a folder of documents under version control',
     why: 'Every saved state of a contract or offer gets a short message such as “client asked for 30-day payment terms”. Six months later you can see exactly what changed, when and why, and go back to any version.',
     kind: 'human',
+    commands: all([{ run: 'git init' }, { run: 'git add .' }, { run: 'git commit -m "Starting point"' }]),
     human: {
       instructions:
-        'After the setup, open your agent in a folder of documents you want to track and ask: “Put this folder under version control with Git. Explain each step, then save the current state with the message ‘Starting point’.” From then on, ask it to save a version whenever you finish a change.',
+        'Now: open a terminal in one folder of documents you want to track (for example your offers) and run the three commands there. They start the history and save the current state as “Starting point”. From then on, ask your agent to save a version whenever you finish a change.',
     },
     docsUrl: 'https://git-scm.com/book/en/v2/Git-Basics-Getting-a-Git-Repository',
   },
