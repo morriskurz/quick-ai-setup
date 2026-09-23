@@ -98,3 +98,13 @@ export const securityCopy = {
   trust:
     'Skills are instructions your agent follows. These come from Anthropic, Cloudflare, Vercel Labs, the googleworkspace GitHub organisation and named authors. Anthropic’s document skills are source-available, not open source. The Google Workspace CLI states that it is not an officially supported Google product.',
 } as const;
+
+// COPY: owner review
+export const startCopy = {
+  eyebrow: 'How to get started',
+  title: 'Restart your agent. Then say what you want.',
+  intro: 'Open a terminal in a project folder and start your agent. Type /grill-me with what you want to achieve: it interviews you first, then builds.',
+  example: '/grill-me A weekly sales report from my Excel exports',
+  /** Shown when Codex or OpenCode is selected: they have no /grill-me command. */
+  otherAgents: 'Codex and OpenCode: type "Use the grill-me skill:" followed by what you want.',
+} as const;

@@ -239,6 +239,16 @@ describe('buildAgentPrompt', () => {
   });
 });
 
+describe('getting started', () => {
+  it('prompt ends by telling the user how to start with grill-me, per agent', () => {
+    const claude = buildAgentPrompt(sel());
+    expect(claude.trimEnd().split('\n').pop()).toContain('restart Claude Code in a project folder and type /grill-me');
+    const codex = buildAgentPrompt(sel({ agents: ['codex'] }));
+    expect(codex).toContain('"Use the grill-me skill:"');
+    expect(codex).not.toContain('/grill-me');
+  });
+});
+
 describe('buildAgentsMd', () => {
   it("global file is the owner's own CLAUDE.md, without the @RTK.md import", () => {
     const { global } = buildAgentsMd(sel());

@@ -13,6 +13,7 @@ import { GoalsSection } from './components/sections/GoalsSection';
 import { Hero } from './components/sections/Hero';
 import { SecuritySection } from './components/sections/SecuritySection';
 import { SetupSection } from './components/sections/SetupSection';
+import { StartSection } from './components/sections/StartSection';
 import { VerifySection } from './components/sections/VerifySection';
 import { OS_LABEL } from './components/ui/os';
 import { useSelection } from './hooks/useSelection';
@@ -70,6 +71,7 @@ export default function App() {
               />
               <AgentsMdSection files={agentsMd} selection={selection} />
               <VerifySection selection={selection} script={verifyScript} onSetOs={setOs} />
+              <StartSection selection={selection} />
             </div>
             <aside aria-label="Live output" className="hidden pt-8 pb-8 lg:block">
               <div className="sticky top-6">

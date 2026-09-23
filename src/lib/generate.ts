@@ -182,9 +182,20 @@ export function buildAgentPrompt(input: Selection): string {
     '- Summarise briefly: what was installed (with versions), skipped or failed, and which steps I still have to do myself.',
     `- Then show me this template and tell me to copy it into every new project as ${projectFiles}:`,
     fence(project.trimEnd(), 'markdown'),
+    startPromptLine(selection),
   );
 
   return lines.join('\n');
+}
+
+/** Last thing the agent tells the user: how to start real work with grill-me. */
+function startPromptLine(selection: Selection): string {
+  const claude = selection.agents.includes('claude-code');
+  const others = selection.agents.filter((a) => a !== 'claude-code').map((a) => agents.find((o) => o.id === a)?.label ?? a);
+  const parts: string[] = [];
+  if (claude) parts.push('restart Claude Code in a project folder and type /grill-me followed by what I want to achieve');
+  if (others.length) parts.push(`in ${others.join(' or ')}, start in a project folder and type "Use the grill-me skill:" followed by what I want`);
+  return `- Finally, tell me how to get started: ${parts.join('; ')}.`;
 }
 
 function houseRulesPromptLines(n: number, selection: Selection): string[] {
