@@ -37,7 +37,10 @@ export const baselineSteps: Step[] = [
     commands: {
       macos: [
         {
-          run: 'curl -o- https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh | bash',
+          // Official form from brew.sh. Piping the script into bash makes stdin a
+          // non-TTY, so install.sh switches to NONINTERACTIVE and aborts with
+          // "Need sudo access" instead of asking for the password.
+          run: '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"',
           note: adminNote('asks for your Mac password.'),
         },
       ],

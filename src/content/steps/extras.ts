@@ -36,7 +36,7 @@ export const extraSteps: Step[] = [
     why: 'Installs RTK’s hook, so Claude Code’s shell commands are shortened automatically. Restart Claude Code afterwards.',
     kind: 'command',
     agents: ['claude-code'],
-    commands: all([{ run: 'rtk init -g', note: 'May ask whether to share anonymous usage statistics. Answer yourself.' }]),
+    commands: all([{ run: 'rtk init -g', note: 'May ask whether to share anonymous usage statistics. Only you answer that question: an agent stops and asks you.' }]),
     docsUrl: RTK_AGENTS_DOCS,
   },
   {
@@ -45,7 +45,7 @@ export const extraSteps: Step[] = [
     why: 'Installs RTK’s hook for Codex, so its shell commands are shortened automatically. Restart Codex afterwards.',
     kind: 'command',
     agents: ['codex'],
-    commands: all([{ run: 'rtk init -g --codex', note: 'May ask whether to share anonymous usage statistics. Answer yourself.' }]),
+    commands: all([{ run: 'rtk init -g --codex', note: 'May ask whether to share anonymous usage statistics. Only you answer that question: an agent stops and asks you.' }]),
     docsUrl: RTK_AGENTS_DOCS,
   },
   {
@@ -55,7 +55,7 @@ export const extraSteps: Step[] = [
     kind: 'command',
     agents: ['opencode'],
     commands: all([
-      { run: 'rtk init -g --opencode', note: 'May ask whether to share anonymous usage statistics. Answer yourself.' },
+      { run: 'rtk init -g --opencode', note: 'May ask whether to share anonymous usage statistics. Only you answer that question: an agent stops and asks you.' },
     ]),
     docsUrl: RTK_AGENTS_DOCS,
   },

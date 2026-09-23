@@ -6,9 +6,12 @@ import {
   extras,
   goals,
   HOUSE_RULES_STEP_ID,
+  sectionCopy,
+  securityCopy,
   steps,
   VERIFY_STEP_ID,
 } from '../content';
+import { splitTitle } from '../components/ui/headline';
 import type { AgentId, OsId, Selection } from '../content/types';
 import { buildAgentPrompt, buildAgentsMd, buildVerifyScript, needsAdmin, renderCommand, resolvePlan } from './generate';
 
@@ -283,5 +286,37 @@ describe('buildVerifyScript', () => {
     expect(script).toContain('not installed');
     expect(script).not.toContain('#!/usr/bin/env bash');
     expect(script).not.toContain("'gws'");
+  });
+});
+
+describe('regressions found in verification', () => {
+  it('Homebrew uses the brew.sh form, not a pipe into bash (a non-TTY stdin makes install.sh abort on sudo)', () => {
+    const text = allCommands(sel({ os: 'macos' }));
+    expect(text).toContain('/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"');
+    expect(text).not.toMatch(/Homebrew\/install\/HEAD\/install\.sh \| bash/);
+  });
+
+  it('never tells the agent to answer the RTK telemetry question itself', () => {
+    const prompt = buildAgentPrompt(sel({ agents: ALL_AGENTS, extras: ['rtk'] }));
+    expect(prompt).not.toContain('Answer yourself');
+    expect(prompt).toContain('Only you answer that question: an agent stops and asks you.');
+  });
+
+  it('every section headline is two sentences with full stops, never a question (brand rule)', () => {
+    const titles = [
+      sectionCopy.agent.title,
+      sectionCopy.goals.title,
+      sectionCopy.extras.title,
+      sectionCopy.setup.title,
+      sectionCopy.houseRules.title,
+      sectionCopy.verify.title,
+      securityCopy.title,
+    ];
+    for (const t of titles) {
+      expect(t, t).not.toContain('?');
+      const { lead, gradient } = splitTitle(t);
+      expect(lead.endsWith('.'), t).toBe(true);
+      expect(gradient?.endsWith('.'), t).toBe(true);
+    }
   });
 });

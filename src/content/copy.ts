@@ -30,7 +30,7 @@ export const heroCopy = {
 export const sectionCopy = {
   agent: {
     eyebrow: 'Step zero',
-    title: 'Pick one coding agent',
+    title: 'Start with one coding agent. We recommend Claude Code.', // COPY: owner review — headline rewritten to the brand's two-sentence form
     intro:
       'A coding agent is a program that reads your files, runs commands and writes changes on your computer, with your permission. You talk to it in plain language. We recommend Claude Code. Codex and OpenCode work too; a few tools on this page only work with Claude Code, and the page adjusts when you pick.',
     installNote:
@@ -42,19 +42,19 @@ export const sectionCopy = {
   },
   goals: {
     eyebrow: 'Goals',
-    title: 'What do you want to do?',
+    title: 'Tick what you want to do. The setup follows.', // COPY: owner review — was a question; brand headlines never are
     intro:
       'Pick as many as you like. Git, Node.js, the grill-me skill, Context7 and a house rules file are always included, because every goal needs them.',
   },
   extras: {
     eyebrow: 'Extras',
-    title: 'Optional, off by default',
+    title: 'Two extras, off by default. Add them later.', // COPY: owner review — headline rewritten to the brand's two-sentence form
     intro:
       'Both make output shorter to save usage. Both also make mistakes harder to spot. Add them after a few weeks, once you know what normal output looks like.',
   },
   setup: {
     eyebrow: 'Your setup',
-    title: 'Copy the prompt, or run it yourself',
+    title: 'Copy one prompt. Or run every step yourself.', // COPY: owner review — headline rewritten to the brand's two-sentence form
     intro:
       'Paste the prompt into your coding agent. It installs everything in order, shows each command before it runs it, and stops whenever it needs you. Or follow the steps yourself: every command has a line on why it is there and a link to its official documentation.',
     copyPromptCta: 'Copy the prompt',
@@ -63,7 +63,7 @@ export const sectionCopy = {
     docsLabel: 'Official docs',
   },
   houseRules: {
-    title: 'House rules',
+    title: 'House rules, written once. Read in every session.', // COPY: owner review — headline rewritten to the brand's two-sentence form
     intro:
       'The prompt adds these rules to each agent’s global instruction file, after making a backup. The project template is for you: copy it into every new project as AGENTS.md and CLAUDE.md.',
     globalLabel: 'Global rules',
@@ -71,7 +71,7 @@ export const sectionCopy = {
   },
   verify: {
     eyebrow: 'Verify',
-    title: 'Check what is installed',
+    title: 'Check what is installed. The script changes nothing.', // COPY: owner review — headline rewritten to the brand's two-sentence form
     intro:
       'Run this in a new terminal window. It prints the version of every tool you picked, or “not installed”. It reads only and changes nothing.',
     copyCta: 'Copy the check',
