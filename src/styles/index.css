@@ -1,0 +1,9 @@
+@import 'tailwindcss';
+
+/*
+ * PENDING: creativecodecampus design-system port.
+ * The DS tokens (tokens/*.css, fonts.css) could not be pulled in the foundation
+ * session — see DESIGN_NOTES.md. When they are pulled, copy them verbatim into
+ * src/styles/tokens/, import them here, and map them to Tailwind with @theme.
+ * Do not invent token names or values in the meantime.
+ */

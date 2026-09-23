@@ -1,0 +1,55 @@
+This repository is dual-licensed. Read both parts.
+
+==============================================================================
+PART 1 — CODE: MIT License
+==============================================================================
+
+Applies to: source code, build configuration, and scripts in this repository
+(for example everything under src/ that is TypeScript/JavaScript/CSS logic,
+and the project configuration files), EXCEPT the material listed in Part 2.
+
+Copyright (c) 2026 Morris Kurz / creativecodecampus
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+==============================================================================
+PART 2 — CONTENT AND BRANDING: All rights reserved
+==============================================================================
+
+Copyright (c) 2026 Morris Kurz / creativecodecampus. All rights reserved.
+
+The following are NOT covered by the MIT License in Part 1 and may not be
+copied, modified, republished, or redistributed without prior written
+permission:
+
+  1. Text content: all written copy on the site, including explanations,
+     step descriptions, warnings, the generated prompt wording, and the
+     AGENTS.md / CLAUDE.md rule text (for example the prose in src/content/).
+  2. Curated recommendations: the selection, grouping, ordering, and
+     annotation of tools, skills, and commands presented by the site.
+  3. creativecodecampus branding and assets: the creativecodecampus name,
+     wordmark, logos, design tokens and design-system styling as a brand
+     identity, imagery, motifs, fonts licensed to creativecodecampus, and any
+     files derived from the creativecodecampus design system.
+
+Where a single file mixes code and content, the code is MIT-licensed and the
+content within it is reserved as described above.
+
+Third-party tools, names, and trademarks referenced by the site belong to
+their respective owners.
