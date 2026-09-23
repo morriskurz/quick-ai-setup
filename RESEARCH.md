@@ -23,6 +23,13 @@ publishable without a recheck — see §4.
 | **Anthropic document skills** | — | `npx skills add https://github.com/anthropics/skills --skill docx -g -a codex -a opencode -y` | `docx`, `xlsx`, `pdf`, `pptx`, plus `frontend-design` (913.5K installs, the registry's most-installed skill). **See the sync rule in §2.** |
 | **Google Workspace skills** | `googleworkspace/cli`, Apache-2.0, 31,110★, 113 skills, 3.2M installs | `npx skills add googleworkspace/cli --skill gws-gmail …` | The largest business-relevant source in the registry. `gws-gmail` (76.8K) is the only credible email answer in the whole skills ecosystem. Picks: `gws-gmail`, `gws-gmail-send`, `gws-sheets`, `gws-docs`, `gws-calendar`, `gws-drive`. **Auth is the hard part — see §3.** |
 
+> **Correction (2026-09-23, implementation pass).** `googleworkspace/cli` lives in Google's
+> googleworkspace GitHub org, but its README says it is "not an officially supported Google
+> product"; the `gws` binary installs separately (`npm install -g @googleworkspace/cli`) and the
+> skills also need `gws-shared`. Context7: `npx ctx7 setup` always runs a browser sign-in
+> (device code), so "free tier keyless" applies only to manual MCP configs. Details in SPEC.md
+> "Implementation corrections".
+
 ### Secondary, worth naming
 
 | Tool | Version | Install | Note |

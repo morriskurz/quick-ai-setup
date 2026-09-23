@@ -312,3 +312,42 @@ German translation happens after the English content is reviewed and settled.
 9. Security section.
 10. Deploy to Workers, connect the domain.
 11. German pass, after English content review.
+
+---
+
+## 11. Implementation corrections (2026-09-23)
+
+Found while implementing `src/content` and `src/lib`. Sources are in the step `docsUrl`s and
+the content draft. These replace the matching statements above.
+
+1. **Context7 is a human step.** `npx ctx7 setup` always runs a browser sign-in at
+   context7.com (device code, then Enter) unless `--api-key`/`--oauth` is passed. The prompt
+   stops and asks. §5's "No API key is required" is wrong for this command.
+2. **Google Workspace CLI is not official Google.** The README says "not an officially
+   supported Google product". The binary installs with `npm install -g @googleworkspace/cli`,
+   the skills need `gws-shared`, and `gws auth setup` needs the `gcloud` CLI, so `gcloud` is
+   installed first. The manual Cloud Console route is the fallback. `-s gmail,calendar,drive,docs,sheets`
+   was verified in the gws source (`docs` → `documents`, `sheets` → `spreadsheets`).
+3. **RTK telemetry is opt-in and off by default.** Per rtk-ai/rtk `docs/TELEMETRY.md` and
+   `src/core/telemetry.rs`, nothing is sent without consent. The consent prompt comes during
+   `rtk init`. Opt-out: `rtk telemetry disable` or `RTK_TELEMETRY_DISABLED=1`. The endpoint
+   host is compiled in and not published.
+4. **No `--copy` on Windows.** skills 1.7.0 creates a junction on Windows and copies if that
+   fails.
+5. **No separate Dart install.** Dart ships with Flutter.
+6. **Node belongs to the baseline.** nvm (`nvm install --lts`) on macOS and Linux, winget
+   `OpenJS.NodeJS.LTS` on Windows. Vite+ is installed with `VP_NODE_MANAGER=no VP_PM_MANAGER=no
+   VP_PNPM_MANAGER=yes`, so it keeps that Node and provides pnpm. That is documented for the
+   bash installer; the PowerShell form is inferred.
+7. **Claude in Chrome is Claude Code only.** agent-browser is for every agent and is
+   Apache-2.0, not MIT.
+8. **The Fortune claim is narrower than written.** Individual top engineers at Anthropic and
+   OpenAI say about 100%. Anthropic's company-wide figure is 70–90%.
+9. **Admin steps are stop-and-ask.** Any `sudo`, Windows administrator prompt or Homebrew
+   install is either a human step or a STOP in the prompt.
+10. **New Windows human step.** `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser`
+    is needed because Windows clients default to Restricted, which blocks the npm `.ps1` shims
+    (`npx`, `gws`, `agent-browser`).
+11. **Global instruction files.** Claude Code reads `~/.claude/CLAUDE.md`, Codex reads
+    `~/.codex/AGENTS.md`, OpenCode reads `~/.config/opencode/AGENTS.md`. The Windows paths for
+    Codex and OpenCode are inferred. Codex does not read `CLAUDE.md`.

@@ -1,55 +1,34 @@
-// STUB — replaced by content agent
-// Minimal, type-valid data so the shell, generator and tests compile.
-// Command strings are taken from SPEC.md §5; everything else is placeholder copy.
+// Content entry point. Step data lives in ./steps/*; this file assembles it and
+// re-exports the names the UI and generator import.
+// Sources and verification notes: SPEC.md "Implementation corrections" and the
+// content draft; every Step carries its own docsUrl.
 
-import type { AgentOption, Extra, Goal, Step } from './types';
+import { agentSteps } from './steps/agents';
+import { baselineSteps } from './steps/baseline';
+import { extraSteps } from './steps/extras';
+import { goalSteps } from './steps/goals';
+import type { Step } from './types';
 
-export const steps: Record<string, Step> = {
-  git: {
-    id: 'git',
-    title: 'Install Git',
-    why: 'Git lets you undo changes and keep versions — for documents too, not only code.',
-    kind: 'command',
-    commands: {
-      windows: [{ run: 'winget install --id Git.Git -e' }],
-      macos: [{ run: 'brew install git' }],
-      linux: [{ run: 'sudo apt-get install git' }],
-    },
-    docsUrl: 'https://git-scm.com/downloads',
-  },
-  'install-claude-code': {
-    id: 'install-claude-code',
-    title: 'Install Claude Code',
-    why: 'Placeholder — the content agent writes this step.',
-    kind: 'human',
-    human: {
-      instructions: 'Placeholder — follow the official install instructions.',
-      url: 'https://docs.anthropic.com/en/docs/claude-code/setup',
-    },
-    docsUrl: 'https://docs.anthropic.com/en/docs/claude-code/setup',
-    agents: ['claude-code'],
-  },
-};
+export { agentLoginStepIds, agents, globalInstructionFiles } from './steps/agents';
+export { NVM_VERSION } from './steps/baseline';
+export { extras, HOUSE_RULES_STEP_ID, RTK_TELEMETRY_DOCS, VERIFY_STEP_ID } from './steps/extras';
+export { FLUTTER_VERSION, goals } from './steps/goals';
+export { ADMIN_NOTE_PREFIX } from './helpers';
+export { heroCopy, sectionCopy, securityCopy } from './copy';
 
-export const agents: AgentOption[] = [
-  {
-    id: 'claude-code',
-    label: 'Claude Code',
-    recommended: true,
-    summary: 'Placeholder summary.',
-    installStepId: 'install-claude-code',
-  },
-];
+const allSteps: Step[] = [...baselineSteps, ...agentSteps, ...goalSteps, ...extraSteps];
 
-export const goals: Goal[] = [
-  {
-    id: 'docs-versioning',
-    label: 'Version control for non-code work',
-    summary: 'Placeholder summary.',
-    stepIds: ['git'],
-  },
-];
+export const steps: Record<string, Step> = Object.fromEntries(allSteps.map((s) => [s.id, s]));
 
-export const extras: Extra[] = [];
+if (Object.keys(steps).length !== allSteps.length) {
+  throw new Error('Duplicate step id in src/content/steps');
+}
 
-export const baselineStepIds: string[] = ['git'];
+/** Baseline steps that run before the coding agents are installed. */
+export const baselineBeforeAgentIds: string[] = ['powershell-scripts', 'homebrew', 'git', 'node'];
+
+/** Baseline steps that need an installed, signed-in agent (skills go into its folder). */
+export const baselineAfterAgentIds: string[] = ['context7', 'grill-me'];
+
+/** Every baseline step id, in plan order (agent installs slot in between the two groups). */
+export const baselineStepIds: string[] = [...baselineBeforeAgentIds, ...baselineAfterAgentIds];

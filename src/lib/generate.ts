@@ -1,17 +1,49 @@
-// STUB — replaced by content agent
-// Signatures are frozen; implementations are placeholders.
+// Turns a Selection into the plan, the agent prompt, the house-rules files and
+// the verify script. Signatures of the five exported functions are frozen.
 
-import { agents, baselineStepIds, extras, goals, steps } from '../content';
-import type { Command, CommandContext, Selection, SetupPlan, Step } from '../content/types';
+import {
+  ADMIN_NOTE_PREFIX,
+  agentLoginStepIds,
+  agents,
+  baselineAfterAgentIds,
+  baselineBeforeAgentIds,
+  extras,
+  globalInstructionFiles,
+  goals,
+  HOUSE_RULES_STEP_ID,
+  steps,
+  VERIFY_STEP_ID,
+} from '../content';
+import { GLOBAL_RULES, PROJECT_EMPTY, PROJECT_FRAGMENTS, PROJECT_HEADER, RTK_RULE } from '../content/rules';
+import type { Command, CommandContext, OsId, Selection, SetupPlan, Step } from '../content/types';
+import { versionChecks, type VersionCheck } from '../content/verify';
 
-/** Ordered, de-duplicated steps for a selection: baseline, agent installs, goals, extras. */
+const OS_LABEL: Record<OsId, string> = {
+  windows: 'Windows (PowerShell)',
+  macos: 'macOS (Terminal, zsh)',
+  linux: 'Linux, Debian or Ubuntu (bash)',
+};
+
+// ── Plan ────────────────────────────────────────────────────────────────────
+
+/**
+ * Ordered, de-duplicated steps for a selection:
+ * baseline (before agents) → agent installs → agent sign-ins → baseline (after
+ * agents) → goals → extras → house rules → verify.
+ * A step is dropped when it is restricted to agents the reader did not pick, or
+ * when it has commands but none for the reader's OS (e.g. Homebrew on Windows).
+ */
 export function resolvePlan(selection: Selection): SetupPlan {
-  // STUB — replaced by content agent
+  const pickedAgents = agents.filter((a) => selection.agents.includes(a.id));
   const ids = [
-    ...baselineStepIds,
-    ...agents.filter((a) => selection.agents.includes(a.id)).map((a) => a.installStepId),
+    ...baselineBeforeAgentIds,
+    ...pickedAgents.map((a) => a.installStepId),
+    ...pickedAgents.map((a) => agentLoginStepIds[a.id]),
+    ...baselineAfterAgentIds,
     ...goals.filter((g) => selection.goals.includes(g.id)).flatMap((g) => g.stepIds),
     ...extras.filter((e) => selection.extras.includes(e.id)).flatMap((e) => e.stepIds),
+    HOUSE_RULES_STEP_ID,
+    VERIFY_STEP_ID,
   ];
   const seen = new Set<string>();
   const out: Step[] = [];
@@ -19,6 +51,7 @@ export function resolvePlan(selection: Selection): SetupPlan {
     const step = steps[id];
     if (!step || seen.has(id)) continue;
     if (step.agents && !step.agents.some((a) => selection.agents.includes(a))) continue;
+    if (step.commands && !step.commands[selection.os]?.length) continue;
     seen.add(id);
     out.push(step);
   }
@@ -27,27 +60,239 @@ export function resolvePlan(selection: Selection): SetupPlan {
 
 /** Resolve a Command to the literal shell text for this context. */
 export function renderCommand(cmd: Command, ctx: CommandContext): string {
-  // STUB — replaced by content agent
   return typeof cmd.run === 'function' ? cmd.run(ctx) : cmd.run;
 }
 
+/** True when a command needs a password, sudo or a Windows administrator prompt. */
+export function needsAdmin(cmd: Command, ctx: CommandContext): boolean {
+  return /\bsudo\b/.test(renderCommand(cmd, ctx)) || (cmd.note?.startsWith(ADMIN_NOTE_PREFIX) ?? false);
+}
+
+// ── Prompt ──────────────────────────────────────────────────────────────────
+
+const labelsOf = <T extends { id: string; label: string }>(list: readonly T[], ids: readonly string[]) =>
+  list.filter((x) => ids.includes(x.id)).map((x) => x.label);
+
+const fence = (text: string, lang = '') => `~~~${lang}\n${text}\n~~~`;
+
+const indent = (text: string, pad = '   ') =>
+  text
+    .split('\n')
+    .map((l) => (l ? pad + l : l))
+    .join('\n');
+
 /** The single copyable prompt for a coding agent. */
 export function buildAgentPrompt(selection: Selection): string {
-  // STUB — replaced by content agent
   const plan = resolvePlan(selection);
-  return plan.steps.map((s, i) => `${i + 1}. ${s.title}`).join('\n');
+  const ctx: CommandContext = { agents: selection.agents, os: selection.os };
+  const shellLang = selection.os === 'windows' ? 'powershell' : 'bash';
+  const goalLabels = labelsOf(goals, selection.goals);
+  const extraLabels = labelsOf(extras, selection.extras);
+
+  const rules = [
+    'Work through the steps below in order. Use only the commands given. Skip a step when its tool is already installed (check with --version first) and tell me you skipped it. You are one of the agents listed above: skip installing and signing in to yourself.',
+    'Before every command, show it and say in one sentence what it does. Then run it.',
+    'If a command fails, explain the error in plain words and suggest a fix. Do not switch to a different installer on your own.',
+    'Never type, ask for or store passwords, tokens, keys or one-time codes. Never paste them into this chat, and tell me not to either.',
+    'When a step says STOP, stop. Tell me exactly what to do, then wait until I reply "done" before you continue.',
+    'Never run a command that uses sudo or needs administrator rights yourself. Show it to me, STOP, and ask me to run it in my own terminal.',
+    'If a command waits for input you cannot give, stop it and ask me.',
+    'Do not delete files and do not change settings beyond what a step says.',
+  ];
+  if (selection.os === 'windows') {
+    rules.push(
+      "After each install, refresh PATH in your shell before the next step: $env:Path = [Environment]::GetEnvironmentVariable('Path','Machine') + ';' + [Environment]::GetEnvironmentVariable('Path','User')",
+    );
+  } else {
+    rules.push('After each install, if a new command is not found, load the shell profile again or ask me to open a new terminal.');
+  }
+
+  const lines: string[] = [
+    'You are setting up this computer for AI-assisted work. I am not a developer, so explain in plain language.',
+    '',
+    'About me',
+    `- System: ${OS_LABEL[selection.os]}`,
+    `- Coding agents I use: ${labelsOf(agents, selection.agents).join(', ') || 'none selected'}`,
+    `- Goals: ${goalLabels.join(', ') || 'only the baseline'}`,
+    `- Extras: ${extraLabels.join(', ') || 'none'}`,
+    '',
+    'Rules for the whole task',
+    ...rules.map((r, i) => `${i + 1}. ${r}`),
+    '',
+    'Steps',
+  ];
+
+  plan.steps.forEach((step, i) => {
+    const n = i + 1;
+    if (step.id === HOUSE_RULES_STEP_ID) {
+      lines.push(...houseRulesPromptLines(n, selection), '');
+      return;
+    }
+    if (step.id === VERIFY_STEP_ID) {
+      lines.push(
+        `${n}. ${step.title}`,
+        indent('Run this check in a fresh shell (paste it in; do not save it as a file) and show me the full output:'),
+        indent(fence(buildVerifyScript(selection), shellLang)),
+        '',
+      );
+      return;
+    }
+
+    const cmds = step.commands?.[selection.os] ?? [];
+    if (step.kind === 'human') {
+      lines.push(`${n}. ${step.title} — STOP: I do this myself.`);
+      if (step.human) lines.push(indent(step.human.instructions));
+      if (step.human?.url) lines.push(indent(`Link: ${step.human.url}`));
+      if (cmds.length) {
+        lines.push(indent('Show me these commands to run in my own terminal:'));
+        lines.push(indent(fence(cmds.map((c) => renderCommand(c, ctx)).join('\n'), shellLang)));
+      }
+      if (step.warning) lines.push(indent(`Tell me first: ${step.warning}`));
+      lines.push(indent('Wait until I say "done" before continuing.'), '');
+      return;
+    }
+
+    lines.push(`${n}. ${step.title}`);
+    if (step.warning) lines.push(indent(`Before this step, tell me: ${step.warning}`));
+    for (const c of cmds) {
+      const text = renderCommand(c, ctx);
+      if (needsAdmin(c, ctx)) {
+        lines.push(indent('STOP: this needs administrator rights. Show me the command, ask me to run it myself, and wait until I say "done":'));
+      }
+      lines.push(indent(fence(text, shellLang)));
+      if (c.note && !c.note.startsWith(ADMIN_NOTE_PREFIX)) lines.push(indent(`(${c.note})`));
+    }
+    lines.push('');
+  });
+
+  const { project } = buildAgentsMd(selection);
+  const projectFiles = selection.agents.includes('claude-code') ? 'AGENTS.md and CLAUDE.md' : 'AGENTS.md';
+  lines.push(
+    'Finish',
+    '- Give me a short summary: what was installed (with versions), what was skipped, what failed, and which steps I still have to do myself.',
+    `- Then show me this template and tell me to copy it into every new project as ${projectFiles}:`,
+    fence(project.trimEnd(), 'markdown'),
+  );
+
+  return lines.join('\n');
 }
+
+function houseRulesPromptLines(n: number, selection: Selection): string[] {
+  const files = agents
+    .filter((a) => selection.agents.includes(a.id))
+    .map((a) => {
+      const f = globalInstructionFiles[a.id];
+      return `- ${a.label}: ${selection.os === 'windows' ? f.windows : f.posix}`;
+    });
+  const { global } = buildAgentsMd(selection);
+  return [
+    `${n}. Write the house rules into each agent's global instruction file:`,
+    indent(files.join('\n')),
+    indent(
+      [
+        'For each file:',
+        '- If it exists, first copy it to the same name with ".backup-" and today\'s date appended, and tell me the backup path. Never overwrite without a backup.',
+        '- Merge: keep everything already in the file and add the rules below at the end. Leave out any rule that is already there in other words.',
+        '- If it does not exist, create it (and its folder) with the rules below.',
+        '- Show me the final file before saving it.',
+      ].join('\n'),
+    ),
+    indent(fence(global.trimEnd(), 'markdown')),
+  ];
+}
+
+// ── House rules ─────────────────────────────────────────────────────────────
 
 /** AGENTS.md / CLAUDE.md content: global baseline and per-project template. */
 export function buildAgentsMd(selection: Selection): { global: string; project: string } {
-  // STUB — replaced by content agent
-  void selection;
-  return { global: '# AGENTS.md\n', project: '# AGENTS.md (project)\n' };
+  const global = GLOBAL_RULES + (selection.extras.includes('rtk') ? RTK_RULE : '');
+  const fragments = goals.filter((g) => selection.goals.includes(g.id)).map((g) => PROJECT_FRAGMENTS[g.id](selection));
+  const project = PROJECT_HEADER + (fragments.length ? fragments.join('') : PROJECT_EMPTY);
+  return { global, project };
 }
+
+// ── Verify script ───────────────────────────────────────────────────────────
+
+function selectedChecks(selection: Selection): VersionCheck[] {
+  const seen = new Set<string>();
+  const out: VersionCheck[] = [];
+  for (const step of resolvePlan(selection).steps) {
+    for (const check of versionChecks[step.id] ?? []) {
+      if (seen.has(check.label)) continue;
+      seen.add(check.label);
+      out.push(check);
+    }
+  }
+  return out;
+}
+
+const shQuote = (s: string) => (/^[\w@%+=:,./-]+$/.test(s) ? s : `'${s.replace(/'/g, `'\\''`)}'`);
+const psQuote = (s: string) => `'${s.replace(/'/g, "''")}'`;
 
 /** One script per OS that prints every installed version. */
 export function buildVerifyScript(selection: Selection): string {
-  // STUB — replaced by content agent
-  void selection;
-  return 'git --version';
+  const checks = selectedChecks(selection);
+  return selection.os === 'windows' ? powershellVerify(checks) : bashVerify(checks);
+}
+
+/** User-level install folders that a fresh terminal would have on PATH. */
+function userBinDirs(checks: VersionCheck[]): string {
+  const dirs = ['"$HOME/.local/bin"'];
+  if (checks.some((c) => c.bin === 'flutter')) dirs.push('"$HOME/develop/flutter/bin"');
+  return dirs.join(' ');
+}
+
+function bashVerify(checks: VersionCheck[]): string {
+  const width = Math.max(14, ...checks.map((c) => c.label.length)) + 2;
+  return [
+    '#!/usr/bin/env bash',
+    '# quick-ai-setup check: prints versions, installs nothing, changes nothing.',
+    '# Pick up tools installed in this session before the terminal was reopened.',
+    '[ -s "$HOME/.nvm/nvm.sh" ] && \\. "$HOME/.nvm/nvm.sh"',
+    `for d in ${userBinDirs(checks)}; do [ -d "$d" ] && PATH="$d:$PATH"; done`,
+    '',
+    'v() {',
+    '  local label="$1"; shift',
+    '  if command -v "$1" >/dev/null 2>&1; then',
+    '    local out',
+    '    out="$("$@" 2>&1 | head -n 1)"',
+    `    printf '%-${width}s %s\\n' "$label" "\${out:-installed}"`,
+    '  else',
+    `    printf '%-${width}s %s\\n' "$label" "not installed"`,
+    '  fi',
+    '}',
+    '',
+    ...checks.map((c) => ['v', shQuote(c.label), c.bin, ...(c.args ?? ['--version']).map(shQuote)].join(' ')),
+    '',
+    'echo',
+    'echo "Skills installed for all projects:"',
+    // The skills CLI prints colour codes even when piped; strip them.
+    "if command -v npx >/dev/null 2>&1; then npx -y skills list -g 2>&1 | sed $'s/\\x1b\\\\[[0-9;]*m//g'; else echo \"npx not installed\"; fi",
+  ].join('\n');
+}
+
+function powershellVerify(checks: VersionCheck[]): string {
+  const width = Math.max(14, ...checks.map((c) => c.label.length)) + 2;
+  return [
+    '# quick-ai-setup check: prints versions, installs nothing, changes nothing.',
+    '# Pick up PATH changes made by installers since this window was opened.',
+    "$env:Path = [Environment]::GetEnvironmentVariable('Path','Machine') + ';' + [Environment]::GetEnvironmentVariable('Path','User')",
+    'function Show-Version([string]$Label, [string]$Bin, [string[]]$Arguments) {',
+    '  # Application only: finds .exe and .cmd, skips .ps1 shims that script policy may block.',
+    '  $cmd = Get-Command $Bin -CommandType Application -ErrorAction SilentlyContinue | Select-Object -First 1',
+    `  if (-not $cmd) { '{0,-${width}} {1}' -f $Label, 'not installed'; return }`,
+    '  try { $out = & $cmd.Source @Arguments 2>&1 | Select-Object -First 1 } catch { $out = $null }',
+    "  if (-not $out) { $out = 'installed' }",
+    `  '{0,-${width}} {1}' -f $Label, "$out"`,
+    '}',
+    '',
+    ...checks.map(
+      (c) => `Show-Version ${psQuote(c.label)} ${psQuote(c.bin)} @(${(c.args ?? ['--version']).map(psQuote).join(', ')})`,
+    ),
+    '',
+    "''",
+    "'Skills installed for all projects:'",
+    '$npx = Get-Command npx -CommandType Application -ErrorAction SilentlyContinue | Select-Object -First 1',
+    "if ($npx) { & $npx.Source -y skills list -g 2>&1 | ForEach-Object { \"$_\" -replace \"$([char]27)\\[[0-9;]*m\", '' } } else { 'npx not installed' }",
+  ].join('\n');
 }
