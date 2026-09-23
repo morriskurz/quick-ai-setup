@@ -14,11 +14,10 @@ export const CONSULTING = {
   photoWidth: 1080,
   photoHeight: 1080,
   name: 'Morris Kurz',
-  role: 'Founder · Munich',
+  role: 'Founder · Karlsruhe',
   bio: 'Co-founder and CTO of hey circle for four years; before that, explainable machine-learning models for a Swiss private bank. Today I measure what AI changes in software development.',
   cta: 'Book a free AI-readiness check',
   /** External links open in a new tab; in-page anchors do not. */
   bookingUrl: 'https://calendar.app.google/PWuAfbTPyD2exyD6A',
   secondaryLink: { label: 'LinkedIn', href: 'https://www.linkedin.com/in/morris-kurz/' },
-  meta: ['MSc Mathematics, KIT', 'EO Accelerator Munich'],
 };

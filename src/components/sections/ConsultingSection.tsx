@@ -1,5 +1,5 @@
 import { CONSULTING as C } from '../consulting';
-import { Button, EyebrowLabel, GradientHeadline, MetaRow } from '../ds';
+import { Button, EyebrowLabel, GradientHeadline } from '../ds';
 import { useReveal } from '../../hooks/useReveal';
 
 const isExternal = (url: string) => /^https?:\/\//.test(url);
@@ -59,7 +59,6 @@ export function ConsultingSection() {
             <span className="ccc-visually-hidden"> (opens in a new tab)</span>
           </a>
         </div>
-        <MetaRow className="mt-1" items={C.meta} />
       </div>
     </section>
   );

@@ -2,26 +2,10 @@
 // English, owner's voice (first person): short, concrete, sentence case, sourced, no hype.
 // COPY: owner review — everything in this file.
 
-export const FORTUNE_URL =
-  'https://fortune.com/2026/01/29/100-percent-of-code-at-anthropic-and-openai-is-now-ai-written-boris-cherny-roon/';
-
 // COPY: owner review
 export const heroCopy = {
   /** Two sentences, rendered on two lines. */
   headline: ['Stay at the frontier.', 'Use what works.'] as const,
-  subline: 'Pick your goals. You get one prompt for your coding agent, or every command to run yourself.',
-  body: [
-    {
-      text: 'At Anthropic and OpenAI, the engineers who build these tools say AI now writes all of their code. Across Anthropic, the share is 70 to 90 percent.',
-      source: { label: 'Fortune, 29 January 2026', url: FORTUNE_URL },
-    },
-    {
-      text: 'Most businesses are still at the setup stage: brokerages, trades, construction, tourism and hospitality, many of them family-run. This page handles the setup.',
-    },
-    {
-      text: 'The hardest problem is unchanged: knowing what you want. So the first skill installed interviews you before anything gets built.',
-    },
-  ],
   primaryCta: 'Build my setup',
 } as const;
 
@@ -65,14 +49,9 @@ export const sectionCopy = {
   },
   verify: {
     eyebrow: 'Verify',
-    title: 'Check what is installed. The script changes nothing.',
+    title: 'Check what is installed.',
     intro: 'Run it in a new terminal window. It prints each tool’s version or “not installed”.',
     copyCta: 'Copy the check',
-  },
-  notIncluded: {
-    title: 'Not included: DuckDB',
-    body: 'DuckDB queries many Excel files at once. Its skill pack lists Windows support as incomplete, so I left it out.',
-    url: 'https://duckdb.org',
   },
 } as const;
 

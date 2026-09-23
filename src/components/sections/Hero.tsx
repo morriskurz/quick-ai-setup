@@ -3,13 +3,13 @@ import { heroCopy } from '../../content';
 import { Button, EyebrowLabel, GradientHeadline, MetaRow, MotifBackdrop } from '../ds';
 import { HeroMotif } from '../motif/HeroMotif';
 
-// Headline, subline and primary CTA come from content (heroCopy).
+// Headline and primary CTA come from content (heroCopy).
 // COPY: owner review — the eyebrow, secondary CTA and proof line below are UI chrome.
 const HERO_CHROME = {
   eyebrow: 'AI setup for small businesses',
   primaryHref: '#choose',
   secondary: { label: 'See every step', href: '#your-setup' },
-  meta: ['Open source', 'No account on this site', 'Windows, macOS and Linux'],
+  meta: ['Open source', 'Windows, macOS and Linux'],
 };
 
 const enter = (delay: number): CSSProperties => ({ '--enter-delay': `${delay}s` }) as CSSProperties;
@@ -53,9 +53,6 @@ export function Hero() {
             className="ccc-enter"
             style={enter(0.32)}
           />
-          <p className="ccc-enter m-0 max-w-measure text-body text-ink-body" style={enter(0.44)}>
-            {heroCopy.subline}
-          </p>
           <div className="ccc-enter mt-1.5 flex flex-wrap items-center gap-[14px]" style={enter(0.56)}>
             <Button variant="primary" href={HERO_CHROME.primaryHref}>
               {heroCopy.primaryCta}

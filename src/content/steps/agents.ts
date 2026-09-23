@@ -102,7 +102,7 @@ export const agents: AgentOption[] = [
     id: 'opencode',
     label: 'OpenCode',
     recommended: false,
-    summary: 'Open-source, many model providers. On Windows, its docs recommend WSL.',
+    summary: 'Open-source, many model providers.',
     installStepId: 'install-opencode',
   },
 ];

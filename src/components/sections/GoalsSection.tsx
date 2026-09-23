@@ -8,7 +8,7 @@ interface GoalsSectionProps {
   onToggle: (id: GoalId) => void;
 }
 
-const { goals: copy, notIncluded } = sectionCopy;
+const { goals: copy } = sectionCopy;
 
 export function GoalsSection({ selection, onToggle }: GoalsSectionProps) {
   return (
@@ -28,18 +28,6 @@ export function GoalsSection({ selection, onToggle }: GoalsSectionProps) {
           ))}
         </div>
       </fieldset>
-      <aside aria-labelledby="not-included-title" className="mt-8 max-w-copy border-t border-hairline pt-5">
-        <h3 id="not-included-title" className="m-0 text-ui font-semibold text-ink">
-          {notIncluded.title}
-        </h3>
-        <p className="mt-2 mb-0 text-nav leading-[1.65] text-ink-body">
-          {notIncluded.body}{' '}
-          <a className="ccc-link" href={notIncluded.url} target="_blank" rel="noopener noreferrer">
-            {notIncluded.url.replace(/^https?:\/\//, '')}
-            <span className="ccc-visually-hidden"> (opens in a new tab)</span>
-          </a>
-        </p>
-      </aside>
     </Section>
   );
 }

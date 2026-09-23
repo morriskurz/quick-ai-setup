@@ -311,7 +311,7 @@ describe('regressions found in verification', () => {
       sectionCopy.extras.title,
       sectionCopy.setup.title,
       sectionCopy.houseRules.title,
-      sectionCopy.verify.title,
+      // sectionCopy.verify.title is one sentence by the owner's choice.
       securityCopy.title,
     ];
     for (const t of titles) {

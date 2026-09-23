@@ -13,7 +13,6 @@ import { GoalsSection } from './components/sections/GoalsSection';
 import { Hero } from './components/sections/Hero';
 import { SecuritySection } from './components/sections/SecuritySection';
 import { SetupSection } from './components/sections/SetupSection';
-import { Thesis } from './components/sections/Thesis';
 import { VerifySection } from './components/sections/VerifySection';
 import { OS_LABEL } from './components/ui/os';
 import { useSelection } from './hooks/useSelection';
@@ -58,7 +57,6 @@ export default function App() {
         <div className="mx-auto max-w-page px-gutter">
           <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_340px] lg:gap-12 xl:grid-cols-[minmax(0,1fr)_420px] xl:gap-24">
             <div className="flex min-w-0 flex-col gap-28 pt-8 pb-8 lg:gap-32">
-              <Thesis />
               <ChooseSection selection={selection} onToggleAgent={toggleAgent} onSetOs={setOs} />
               <GoalsSection selection={selection} onToggle={toggleGoal} />
               <ExtrasSection selection={selection} onToggle={toggleExtra} />
