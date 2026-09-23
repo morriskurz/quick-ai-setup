@@ -6,6 +6,7 @@
 export const heroCopy = {
   /** Two sentences, rendered on two lines. */
   headline: ['Stay at the frontier.', 'Use what works.'] as const,
+  subline: 'Curated, not complete: the skills, CLIs and instruction file I use myself.',
   primaryCta: 'Build my setup',
 } as const;
 
