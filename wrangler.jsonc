@@ -8,6 +8,9 @@
     "not_found_handling": "single-page-application"
   },
   "routes": [
-    { "pattern": "ai.creativecodecampus.com", "custom_domain": true }
+    { "pattern": "ai.creativecodecampus.com", "custom_domain": true },
+    // The zone has a wildcard route (*.creativecodecampus.com/* -> praxis-demos) that
+    // captures every subdomain first. This more specific route sends ai. to this Worker.
+    { "pattern": "ai.creativecodecampus.com/*", "zone_name": "creativecodecampus.com" }
   ]
 }
