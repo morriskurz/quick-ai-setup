@@ -6,7 +6,7 @@ export const CONSULTING = {
   eyebrow: 'AI-readiness consulting',
   lead: 'Setup is step one.',
   gradient: 'Habits make it stick.',
-  body: 'The first call is free: an AI-readiness check for you and your company.',
+  body: 'I help founders and teams go further: advanced habits, a knowledge system, one setup for the whole team. The first call is free and includes an AI-readiness check.',
   /** Empty string renders an empty hairline frame instead of the photo. */
   photoSrc: morrisPhoto as string,
   photoAlt: 'Morris Kurz at his desk',
