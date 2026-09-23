@@ -240,10 +240,11 @@ describe('buildAgentPrompt', () => {
 });
 
 describe('buildAgentsMd', () => {
-  it('global file has universal rules and no personal entries', () => {
+  it("global file is the owner's own CLAUDE.md, without the @RTK.md import", () => {
     const { global } = buildAgentsMd(sel());
-    expect(global).toContain('Actually run what you write');
-    expect(global).not.toMatch(/orchestrator/i);
+    expect(global.startsWith('# CLAUDE.md — Working Rules')).toBe(true);
+    expect(global).toContain('## Verification Protocol');
+    expect(global).toContain('Mark unverified claims `[needs verification]`.');
     expect(global).not.toContain('@RTK.md');
     expect(global).not.toMatch(/RTK/);
   });

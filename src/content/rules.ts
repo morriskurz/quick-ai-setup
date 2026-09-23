@@ -1,34 +1,62 @@
 // House rules: the text written to AGENTS.md / CLAUDE.md.
-// Source: a curated subset of the owner's own global CLAUDE.md (SPEC §6).
-// Excluded on purpose: the orchestrator role, the @RTK.md import (rtk init adds
-// its own reference), the self-improvement section, and anything developer-only.
-// COPY: owner review — every rule below.
+// GLOBAL_RULES is the owner's own global CLAUDE.md, verbatim (his choice, 2026-09-23).
+// The @RTK.md import is left out: `rtk init` adds its own reference when RTK is ticked.
+// COPY: owner's file — change only when he changes his own.
 
 import type { GoalId, Selection } from './types';
 
-export const GLOBAL_RULES_HEADING = '# Working rules';
+export const GLOBAL_RULES = `# CLAUDE.md — Working Rules
 
-export const GLOBAL_RULES = `${GLOBAL_RULES_HEADING}
+## Workflow Rules
+- **Always run/execute code after making changes** — don't just syntax-check; actually run the script to verify it works end-to-end, so errors can be caught and fixed immediately
+- **Reread your task plan** and **reread the relevant files to the task** before continuing
 
-## Before you start
-- Plan first. For anything bigger than a small fix, outline the steps and ask me about anything unclear.
-- State your assumptions. If a request can be read two ways, pick the likelier one and tell me which.
+## Role
+- You are the orchestrator. Never do work yourself. Spawn teams of subagents for every task. Your job is to think, plan & coordinate. Subagents execute.
 
-## While you work
-- Actually run what you write. A script, formula or page is done only when you have run it and seen it work.
-- If something fails, find out why before retrying. After three failed attempts with one approach, switch approach or ask me.
-- Keep sessions short. Save or commit finished work and start a new session for the next task.
+## User Preferences
+- **Use pnpm or bun** where possible instead of npm
+- **Use uv** for python
+- **Abstraction litmus test**: Before writing an abstraction, ask: "What concrete problem does this solve right now?" If the answer is "well, if we ever need to…" — you don't need it.
 
-## Before you say "done"
-- Re-read my request and check your result answers it.
-- Check every number, name, date and link against its source.
-- Re-open every file you created or changed and check it is complete.
-- Call something finished only after verifying it. If you could not verify it, say so.
+## Verification Protocol
+Before delivering ANY result, complete this 5-step checklist:
+1. **Re-read your output** — Does it match what was asked? Check task scope.
+2. **Verify data accuracy** — Cross-check numbers, URLs, dates, usernames against source material or logs.
+3. **Validate all claims** — If you made assertions, verify each one. Mark unverified claims \`[needs verification]\`.
+4. **File integrity check** — If you created/modified files, re-read them. Validate formatting, syntax, completeness.
+5. **Test execution** — If you ran code/scripts, verify output matches expectations. Check exit codes and logs.
 
-## Facts
-- Look up anything that may have changed recently instead of relying on memory.
-- Cite the source (a link or a file) for factual claims.
-- If sources disagree, show me both.
+## Robust Results in One Pass
+- **Plan before acting** — Outline approach first, execute second. Ask clarifying questions BEFORE starting.
+- **Track multi-part tasks** — Use todo lists to avoid missing components.
+- **State assumptions** — When requirements are ambiguous, implement the most likely interpretation AND note what you assumed.
+- **Test incrementally** — Verify at each step, not only at the end. Don't batch problems.
+- **Diagnose errors immediately** — If a tool fails, diagnose before retrying. After 3 failures, switch approaches.
+- **Short sessions over marathons** — Commit progress to files frequently. Start new sessions for new tasks. At 90% context, quality degrades.
+
+## Research and Facts
+- **Search before claiming** — For facts that may have changed, search current data rather than relying on training knowledge.
+- **Cite sources** — Include source URLs/references for factual claims.
+- **Distinguish sources clearly** — Label whether information is from training vs. current search.
+- **Handle conflicts** — When data conflicts, present both versions. Don't hide discrepancies.
+- **Save data** - If you used data in a data analysis, it needs to be reproducible. That means the source must be clear and the data available locally.
+
+## Documents and Files
+- **Save to workspace** — All deliverables go to the workspace folder, not temp directories.
+- **Use appropriate formats** — .docx for documents, .xlsx for data, .pptx for presentations, .md for notes.
+- **Build iteratively** — Outline structure first, fill content second for long documents.
+- **Verify before closing** — Re-read files after creation. Check for syntax errors, incomplete sections, broken links.
+
+## When Things Go Wrong
+- **Diagnose, don't retry blindly** — Understand the error before retrying.
+- **Alternative approaches** — After 3 failures on the same tool/approach, switch methods.
+- **Verify outcomes** — Don't assume success. Test/verify the result explicitly.
+- **Never say "done"** — Only claim completion after verification step completes successfully.
+
+## Self-Improvement
+- If you make a recurring mistake, add a rule here to prevent it next time.
+- This file is a living document — update it as patterns emerge.
 `;
 
 /** Added to the global file only when the RTK extra is selected. */

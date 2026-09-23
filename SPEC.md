@@ -356,3 +356,5 @@ the content draft. These replace the matching statements above.
 11. **Global instruction files.** Claude Code reads `~/.claude/CLAUDE.md`, Codex reads
     `~/.codex/AGENTS.md`, OpenCode reads `~/.config/opencode/AGENTS.md`. The Windows paths for
     Codex and OpenCode are inferred. Codex does not read `CLAUDE.md`.
+
+- **House rules (2026-09-23, owner decision):** the global instruction file is now the owner's own `~/.claude/CLAUDE.md` verbatim (minus the `@RTK.md` import), replacing the curated subset described in §6.
