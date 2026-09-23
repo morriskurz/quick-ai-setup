@@ -1,3 +1,4 @@
+import { sectionCopy } from '../../content';
 import { useEffect, useId, useState } from 'react';
 import { CopyButton } from '../ui/CopyButton';
 import { PromptView } from './PromptView';
@@ -50,7 +51,7 @@ export function MobileSheet({ prompt, stepCount }: MobileSheetProps) {
           </span>
           <span className="text-nav font-medium">{open ? 'Hide the prompt' : 'Show the prompt'}</span>
         </button>
-        <CopyButton variant="primary" label="Copy the prompt" getText={() => prompt} className="flex-none px-5" />
+        <CopyButton variant="primary" label={sectionCopy.setup.copyPromptCta} getText={() => prompt} className="flex-none px-5" />
       </div>
     </section>
   );

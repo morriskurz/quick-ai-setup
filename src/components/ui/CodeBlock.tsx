@@ -10,11 +10,12 @@ interface CodeBlockProps {
   /** Wrap long lines (markdown files); commands scroll horizontally instead. */
   wrap?: boolean;
   copyLabel?: string;
+  docsLabel?: string;
   className?: string;
 }
 
 /** Hairline mono block with a Docs link and a copy button in its header. */
-export function CodeBlock({ code, label, context, docsUrl, wrap = false, copyLabel = 'Copy', className = '' }: CodeBlockProps) {
+export function CodeBlock({ code, label, context, docsUrl, wrap = false, copyLabel = 'Copy', docsLabel = 'Docs', className = '' }: CodeBlockProps) {
   return (
     <div className={`ccc-code ${className}`}>
       <div className="ccc-code__head">
@@ -26,9 +27,9 @@ export function CodeBlock({ code, label, context, docsUrl, wrap = false, copyLab
               target="_blank"
               rel="noopener noreferrer"
               className="ccc-link text-nav"
-              aria-label={`Docs for ${context} (opens in a new tab)`}
+              aria-label={`${docsLabel} for ${context} (opens in a new tab)`}
             >
-              Docs
+              {docsLabel}
             </a>
           )}
           <CopyButton small getText={() => code} label={copyLabel} ariaLabel={`${copyLabel} ${context}`} />

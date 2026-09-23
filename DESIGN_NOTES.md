@@ -138,9 +138,20 @@ The still PNG motifs are not available in this repo; the live scene is the motif
 
 ## Content boundary
 
-The UI consumes content only through `src/content/index.ts` (`agents`, `goals`,
-`extras`, `baselineStepIds`, `steps`) and `src/lib/generate.ts` (`resolvePlan`,
-`renderCommand`, `buildAgentPrompt`, `buildAgentsMd`, `buildVerifyScript`).
-Page chrome copy that has no content export yet (hero, section headlines,
-security notes, consulting) lives next to its component and is marked
-`// COPY: owner review`.
+The UI consumes content only through `src/content/index.ts` and
+`src/lib/generate.ts`. Page copy comes from `heroCopy`, `sectionCopy` and
+`securityCopy` (`src/content/copy.ts`); `Section` takes a content `title` and
+splits a two-sentence title into lead + gradient (`splitTitle`), while a
+single-phrase title renders solid. Other exports in use: `globalInstructionFiles`
+(house-rules file paths), `RTK_TELEMETRY_DOCS` (extras), `HOUSE_RULES_STEP_ID` /
+`VERIFY_STEP_ID` (step rendering; the verify step shows `buildVerifyScript`),
+`ADMIN_NOTE_PREFIX` + `needsAdmin` (administrator marker on commands). Not
+rendered on purpose: `agentLoginStepIds`, `baselineBeforeAgentIds`,
+`baselineAfterAgentIds` (plan ordering, used by `resolvePlan`), `NVM_VERSION`,
+`FLUTTER_VERSION` (already inside the commands). `RichText` linkifies bare URLs
+and renders `backticks` as inline mono in step text.
+
+UI-owned copy with no content export (hero eyebrow and proof line, "Path one /
+Path two" sub-headings, the house-rules eyebrow, small link labels, the
+consulting section in `src/components/consulting.ts`) stays next to its
+component, marked `// COPY: owner review`.

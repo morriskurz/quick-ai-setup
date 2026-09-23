@@ -1,26 +1,46 @@
+import { agents, globalInstructionFiles, sectionCopy } from '../../content';
+import type { Selection } from '../../content/types';
 import type { buildAgentsMd } from '../../lib/generate';
 import { CodeBlock } from '../ui/CodeBlock';
 import { Section } from '../ui/Section';
 
-export function AgentsMdSection({ files }: { files: ReturnType<typeof buildAgentsMd> }) {
+interface AgentsMdSectionProps {
+  files: ReturnType<typeof buildAgentsMd>;
+  selection: Selection;
+}
+
+const copy = sectionCopy.houseRules;
+
+/** House rules: the global rules, where each picked agent keeps them, and the project template. */
+export function AgentsMdSection({ files, selection }: AgentsMdSectionProps) {
+  const picked = agents.filter((a) => selection.agents.includes(a.id));
   return (
-    <Section
-      id="house-rules"
-      eyebrow="AGENTS.md and CLAUDE.md"
-      // COPY: owner review
-      lead="Rules the agent reads."
-      gradient="Every session."
-      intro={
-        <p className="m-0">
-          Claude Code reads CLAUDE.md; Codex and OpenCode read AGENTS.md. The prompt writes both with the same
-          content. The global file holds rules for every project; put the project template into each new project
-          folder.
-        </p>
-      }
-    >
+    // COPY: owner review — eyebrow
+    <Section id="house-rules" eyebrow="AGENTS.md and CLAUDE.md" title={copy.title} intro={<p className="m-0">{copy.intro}</p>}>
       <div className="flex flex-col gap-6">
-        <CodeBlock code={files.global} label="Global rules" context="global rules file" wrap />
-        <CodeBlock code={files.project} label="Project template" context="project template file" wrap />
+        <div className="flex flex-col gap-3">
+          <CodeBlock code={files.global} label={copy.globalLabel} context={copy.globalLabel} wrap />
+          {picked.length > 0 && (
+            <ul className="m-0 flex list-none flex-col gap-1.5 p-0">
+              {picked.map((a) => {
+                const f = globalInstructionFiles[a.id];
+                return (
+                  <li key={a.id} className="flex flex-wrap items-baseline gap-x-3 gap-y-1 text-nav text-ink-body">
+                    <span className="text-ink">{a.label}</span>
+                    <code className="font-mono text-meta text-ink [overflow-wrap:anywhere]">
+                      {selection.os === 'windows' ? f.windows : f.posix}
+                    </code>
+                    <a className="ccc-link" href={f.docsUrl} target="_blank" rel="noopener noreferrer">
+                      {sectionCopy.setup.docsLabel}
+                      <span className="ccc-visually-hidden"> for {a.label} instruction files (opens in a new tab)</span>
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </div>
+        <CodeBlock code={files.project} label={copy.projectLabel} context={copy.projectLabel} wrap />
       </div>
     </Section>
   );

@@ -1,5 +1,5 @@
 import { useMemo, type CSSProperties } from 'react';
-import { agents } from './content';
+import { agents, sectionCopy } from './content';
 import { buildAgentPrompt, buildAgentsMd, buildVerifyScript, resolvePlan } from './lib/generate';
 import { NavBar } from './components/ds';
 import { MobileSheet } from './components/output/MobileSheet';
@@ -13,6 +13,7 @@ import { GoalsSection } from './components/sections/GoalsSection';
 import { Hero } from './components/sections/Hero';
 import { SecuritySection } from './components/sections/SecuritySection';
 import { SetupSection } from './components/sections/SetupSection';
+import { Thesis } from './components/sections/Thesis';
 import { VerifySection } from './components/sections/VerifySection';
 import { OS_LABEL } from './components/ui/os';
 import { useSelection } from './hooks/useSelection';
@@ -50,25 +51,26 @@ export default function App() {
         className="ccc-enter absolute inset-x-0 top-0 z-30 mx-auto max-w-page"
         style={{ '--enter-delay': '0.1s' } as CSSProperties}
         links={NAV_LINKS}
-        cta={{ label: 'Copy the prompt', href: '#prompt' }}
+        cta={{ label: sectionCopy.setup.copyPromptCta, href: '#prompt' }}
       />
       <main>
         <Hero />
         <div className="mx-auto max-w-page px-gutter">
           <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_340px] lg:gap-12 xl:grid-cols-[minmax(0,1fr)_420px] xl:gap-24">
             <div className="flex min-w-0 flex-col gap-28 pt-8 pb-8 lg:gap-32">
+              <Thesis />
               <ChooseSection selection={selection} onToggleAgent={toggleAgent} onSetOs={setOs} />
               <GoalsSection selection={selection} onToggle={toggleGoal} />
               <ExtrasSection selection={selection} onToggle={toggleExtra} />
-              <SecuritySection plan={plan} />
+              <SecuritySection plan={plan} selection={selection} />
               <SetupSection
                 selection={selection}
                 plan={plan}
                 prompt={prompt}
-                agentLabels={agentLabels}
+                verifyScript={verifyScript}
                 onSetOs={setOs}
               />
-              <AgentsMdSection files={agentsMd} />
+              <AgentsMdSection files={agentsMd} selection={selection} />
               <VerifySection selection={selection} script={verifyScript} onSetOs={setOs} />
             </div>
             <aside aria-label="Live output" className="hidden pt-8 pb-8 lg:block">

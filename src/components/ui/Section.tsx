@@ -1,12 +1,13 @@
 import type { ReactNode } from 'react';
 import { useReveal } from '../../hooks/useReveal';
 import { EyebrowLabel, GradientHeadline } from '../ds';
+import { splitTitle } from './headline';
 
 interface SectionProps {
   id: string;
   eyebrow: string;
-  lead: string;
-  gradient: string;
+  /** Content title; a two-sentence title puts the second sentence in the gradient. */
+  title: string;
   /** One or two sentences under the headline. */
   intro?: ReactNode;
   children?: ReactNode;
@@ -17,7 +18,8 @@ interface SectionProps {
  * Page section: eyebrow, two-sentence gradient headline, short intro, content.
  * Reveals once with ccc-up when it first scrolls into view.
  */
-export function Section({ id, eyebrow, lead, gradient, intro, children, className = '' }: SectionProps) {
+export function Section({ id, eyebrow, title, intro, children, className = '' }: SectionProps) {
+  const { lead, gradient } = splitTitle(title);
   const ref = useReveal<HTMLElement>();
   const headingId = `${id}-heading`;
   return (

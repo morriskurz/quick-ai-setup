@@ -1,4 +1,4 @@
-import { extras } from '../../content';
+import { extras, RTK_TELEMETRY_DOCS, sectionCopy } from '../../content';
 import type { ExtraId, Selection } from '../../content/types';
 import { Choice } from '../ui/Choice';
 import { Section } from '../ui/Section';
@@ -8,24 +8,12 @@ interface ExtrasSectionProps {
   onToggle: (id: ExtraId) => void;
 }
 
+const copy = sectionCopy.extras;
+
 export function ExtrasSection({ selection, onToggle }: ExtrasSectionProps) {
   return (
-    <Section
-      id="extras"
-      eyebrow="Extras"
-      // COPY: owner review
-      lead="Optional."
-      gradient="Off by default."
-      intro={
-        <p className="m-0">
-          Both make the agent’s output shorter. That saves money, and it makes mistakes harder to spot — add them
-          after a few weeks, not on day one.
-        </p>
-      }
-    >
-      {extras.length === 0 ? (
-        <p className="m-0 text-nav text-ink-muted">No extras yet.</p>
-      ) : (
+    <Section id="extras" eyebrow={copy.eyebrow} title={copy.title} intro={<p className="m-0">{copy.intro}</p>}>
+      {extras.length > 0 && (
         <fieldset className="m-0 min-w-0 border-0 p-0">
           <legend className="ccc-visually-hidden">Extras</legend>
           <div className="grid gap-3 [grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr))]">
@@ -37,7 +25,20 @@ export function ExtrasSection({ selection, onToggle }: ExtrasSectionProps) {
                 onChange={() => onToggle(x.id)}
                 label={x.label}
                 summary={x.summary}
-                warning={x.warning}
+                warning={
+                  x.id === 'rtk' ? (
+                    <>
+                      {x.warning}{' '}
+                      {/* COPY: owner review — link label */}
+                      <a className="ccc-link" href={RTK_TELEMETRY_DOCS} target="_blank" rel="noopener noreferrer">
+                        Telemetry details
+                        <span className="ccc-visually-hidden"> (opens in a new tab)</span>
+                      </a>
+                    </>
+                  ) : (
+                    x.warning
+                  )
+                }
               />
             ))}
           </div>

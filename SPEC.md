@@ -67,6 +67,11 @@ Single scroll. Sticky output panel on the right (desktop) / bottom sheet (mobile
 6. **Your setup** — the generated prompt, plus the manual step-by-step walkthrough
    with an OS tab switcher (Windows / macOS / Linux).
 7. **Verify** — one script per OS that prints every installed version.
+8. **Consulting** — the owner's photo and a call to book a call. Offer: AI-readiness
+   consulting for founders and companies — advanced habits, a knowledge system, and
+   team setup beyond what this page covers. Credibility comes from the owner's own
+   startup software experience. The photo follows the brand's single rule for
+   photography: graded cool and dark, under the same vignette and grain. No circle crop.
 
 ### Live output panel
 

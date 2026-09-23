@@ -1,14 +1,13 @@
 import type { CSSProperties } from 'react';
+import { heroCopy } from '../../content';
 import { Button, EyebrowLabel, GradientHeadline, MetaRow, MotifBackdrop } from '../ds';
 import { HeroMotif } from '../motif/HeroMotif';
 
-// COPY: owner review — hero copy lives here until the content exports carry it.
-const HERO = {
+// Headline, subline and primary CTA come from content (heroCopy).
+// COPY: owner review — the eyebrow, secondary CTA and proof line below are UI chrome.
+const HERO_CHROME = {
   eyebrow: 'AI setup for small businesses',
-  lead: 'A working AI setup.',
-  gradient: 'In one sitting.',
-  body: 'Tick what you want to get done, then copy one prompt into your coding agent or run each step yourself — for brokerages, builders, trades, hotels and other family-run businesses.',
-  primary: { label: 'Build your prompt', href: '#choose' },
+  primaryHref: '#choose',
   secondary: { label: 'See every step', href: '#your-setup' },
   meta: ['Open source', 'No account on this site', 'Windows, macOS and Linux'],
 };
@@ -45,27 +44,27 @@ export function Hero() {
       <div className="mx-auto box-border flex min-h-[100svh] w-full max-w-page flex-col justify-center px-gutter pt-[130px] pb-[100px]">
         <div className="flex max-w-copy flex-col items-start gap-[26px]">
           <EyebrowLabel className="ccc-enter" style={enter(0.22)}>
-            {HERO.eyebrow}
+            {HERO_CHROME.eyebrow}
           </EyebrowLabel>
           <GradientHeadline
             id="hero-heading"
-            lead={HERO.lead}
-            gradient={HERO.gradient}
+            lead={heroCopy.headline[0]}
+            gradient={heroCopy.headline[1]}
             className="ccc-enter"
             style={enter(0.32)}
           />
           <p className="ccc-enter m-0 max-w-measure text-body text-ink-body" style={enter(0.44)}>
-            {HERO.body}
+            {heroCopy.subline}
           </p>
           <div className="ccc-enter mt-1.5 flex flex-wrap items-center gap-[14px]" style={enter(0.56)}>
-            <Button variant="primary" href={HERO.primary.href}>
-              {HERO.primary.label}
+            <Button variant="primary" href={HERO_CHROME.primaryHref}>
+              {heroCopy.primaryCta}
             </Button>
-            <Button variant="secondary" href={HERO.secondary.href}>
-              {HERO.secondary.label}
+            <Button variant="secondary" href={HERO_CHROME.secondary.href}>
+              {HERO_CHROME.secondary.label}
             </Button>
           </div>
-          <MetaRow className="ccc-enter mt-2.5" style={enter(0.68)} items={HERO.meta} />
+          <MetaRow className="ccc-enter mt-2.5" style={enter(0.68)} items={HERO_CHROME.meta} />
         </div>
       </div>
     </MotifBackdrop>
