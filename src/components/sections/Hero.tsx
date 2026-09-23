@@ -6,7 +6,7 @@ import { HeroMotif } from '../motif/HeroMotif';
 // Headline and primary CTA come from content (heroCopy).
 // COPY: owner review — the eyebrow, secondary CTA and proof line below are UI chrome.
 const HERO_CHROME = {
-  eyebrow: 'AI setup for small businesses',
+  eyebrow: 'Advanced AI setup for anyone',
   primaryHref: '#choose',
   secondary: { label: 'See every step', href: '#your-setup' },
   meta: ['Open source', 'Windows, macOS and Linux'],
