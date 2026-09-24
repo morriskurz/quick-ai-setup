@@ -13,7 +13,7 @@ interface GradientHeadlineProps {
   style?: CSSProperties;
 }
 
-/** Display headline: two short sentences, the second carries the gradient. */
+/** Display headline: two short sentences, the second in solid brand cyan. */
 export function GradientHeadline({
   lead,
   gradient,
@@ -30,7 +30,7 @@ export function GradientHeadline({
       {gradient && (
         <>
           <br />
-          <span className="ccc-gradient-text">{gradient}</span>
+          <span className="ccc-headline-accent">{gradient}</span>
         </>
       )}
     </Tag>

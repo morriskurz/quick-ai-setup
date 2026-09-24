@@ -12,7 +12,7 @@ const { goals: copy } = sectionCopy;
 
 export function GoalsSection({ selection, onToggle }: GoalsSectionProps) {
   return (
-    <Section id="goals" eyebrow={copy.eyebrow} title={copy.title} intro={<p className="m-0">{copy.intro}</p>}>
+    <Section id="goals" title={copy.title} intro={<p className="m-0">{copy.intro}</p>}>
       <fieldset className="m-0 min-w-0 border-0 p-0">
         <legend className="ccc-visually-hidden">Goals</legend>
         <div className="grid gap-3 [grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr))]">

@@ -10,7 +10,7 @@ interface EyebrowLabelProps {
   style?: CSSProperties;
 }
 
-/** Mono, uppercase, 0.14em-tracked kicker with a short cyan rule. The only uppercase in the brand. */
+/** Mono, sentence-case kicker with a short cyan rule. (The brand's uppercase tracking was dropped, owner decision 2026-09-24.) */
 export function EyebrowLabel({ children, rule = true, as: Tag = 'div', className = '', id, style }: EyebrowLabelProps) {
   return (
     <Tag id={id} style={style} className={`ccc-eyebrow ${className}`}>

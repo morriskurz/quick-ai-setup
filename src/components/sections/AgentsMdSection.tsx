@@ -15,8 +15,7 @@ const copy = sectionCopy.houseRules;
 export function AgentsMdSection({ files, selection }: AgentsMdSectionProps) {
   const picked = agents.filter((a) => selection.agents.includes(a.id));
   return (
-    // COPY: owner review — eyebrow
-    <Section id="house-rules" eyebrow="AGENTS.md and CLAUDE.md" title={copy.title} intro={<p className="m-0">{copy.intro}</p>}>
+    <Section id="house-rules" title={copy.title} intro={<p className="m-0">{copy.intro}</p>}>
       <div className="flex flex-col gap-6">
         <div className="flex flex-col gap-3">
           <CodeBlock code={files.global} label={copy.globalLabel} context={copy.globalLabel} wrap />

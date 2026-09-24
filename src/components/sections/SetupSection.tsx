@@ -22,7 +22,7 @@ const copy = sectionCopy.setup;
 export function SetupSection({ selection, plan, prompt, verifyScript, onSetOs }: SetupSectionProps) {
   const panelId = 'manual-steps-panel';
   return (
-    <Section id="your-setup" eyebrow={copy.eyebrow} title={copy.title} intro={<p className="m-0">{copy.intro}</p>}>
+    <Section id="your-setup" title={copy.title} intro={<p className="m-0">{copy.intro}</p>}>
       <div id="prompt" className="ccc-hairline-card scroll-mt-6 flex flex-col gap-4 p-5 sm:p-6">
         {/* COPY: owner review — sub-headings */}
         <h3 className="m-0 text-body font-semibold text-ink">Path one: copy the prompt</h3>

@@ -151,3 +151,18 @@ UI-owned copy with no content export (hero eyebrow and proof line, "Path one /
 Path two" sub-headings, the house-rules eyebrow, small link labels, the
 consulting section in `src/components/consulting.ts`) stays next to its
 component, marked `// COPY: owner review`.
+
+## Owner overrides after the AI-slop review (2026-09-24)
+
+These deliberately depart from the creativecodecampus design system. Carry them into the
+design-system project too, or other creativecodecampus pages keep the old patterns.
+
+- **No gradient text.** The second headline sentence is solid `--ccc-cyan` (`.ccc-headline-accent`),
+  replacing the `background-clip: text` gradient. `--ccc-text-gradient` is now unused.
+- **Brighter text.** `--ccc-text-body` 0.70 → 0.95 alpha (14.7:1 on the ground);
+  `--ccc-text-muted` 0.42 → 0.58 alpha (5.8:1, was 3.5:1 and failed WCAG AA).
+- **No uppercase labels.** Eyebrow labels are sentence case with footnote tracking (0.02em).
+  Section labels were removed where they repeated the headline; kept only on the hero
+  ("Advanced AI setup for anyone") and "How to get started".
+- **Kept on purpose:** the cyan glow on the primary button, the hero's scrims/vignette/bloom,
+  and the numbered install steps (a real procedure, not filler).

@@ -16,7 +16,6 @@ export function SecuritySection({ plan, selection }: SecuritySectionProps) {
   return (
     <Section
       id="security"
-      eyebrow={securityCopy.eyebrow}
       title={securityCopy.title}
       intro={
         // COPY: owner review — derived count line

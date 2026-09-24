@@ -26,8 +26,8 @@
   --ccc-text-display: #F4FBFE;
   --ccc-text-strong: #F2FAFD;
   --ccc-text: #EAF6FA;
-  --ccc-text-body: rgba(214, 235, 242, 0.70);
-  --ccc-text-muted: rgba(214, 235, 242, 0.42);
+  --ccc-text-body: rgba(214, 235, 242, 0.95);   /* was 0.70; raised for legibility (owner, 2026-09-24) */
+  --ccc-text-muted: rgba(214, 235, 242, 0.58);  /* was 0.42 (3.5:1); now ≥ 4.5:1 on the ground */
   --ccc-text-nav: rgba(234, 246, 250, 0.62);
   --ccc-on-cyan: #021014;         /* label on a cyan fill */
   --ccc-on-cyan-active: #010B0E;

@@ -17,7 +17,7 @@ export function VerifySection({ selection, script, onSetOs }: VerifySectionProps
   const panelId = 'verify-panel';
   const os = selection.os;
   return (
-    <Section id="verify" eyebrow={copy.eyebrow} title={copy.title} intro={<p className="m-0">{copy.intro}</p>}>
+    <Section id="verify" title={copy.title} intro={<p className="m-0">{copy.intro}</p>}>
       <OsTabs value={os} onChange={onSetOs} idBase="verify" panelId={panelId} label="Operating system for the verify script" />
       <div id={panelId} role="tabpanel" aria-labelledby={tabId('verify', os)} className="mt-6">
         <div key={os} className="ccc-fade">

@@ -12,7 +12,7 @@ const copy = sectionCopy.extras;
 
 export function ExtrasSection({ selection, onToggle }: ExtrasSectionProps) {
   return (
-    <Section id="extras" eyebrow={copy.eyebrow} title={copy.title} intro={<p className="m-0">{copy.intro}</p>}>
+    <Section id="extras" title={copy.title} intro={<p className="m-0">{copy.intro}</p>}>
       {extras.length > 0 && (
         <fieldset className="m-0 min-w-0 border-0 p-0">
           <legend className="ccc-visually-hidden">Extras</legend>

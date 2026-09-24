@@ -5,7 +5,8 @@ import { splitTitle } from './headline';
 
 interface SectionProps {
   id: string;
-  eyebrow: string;
+  /** Optional label above the headline; only for labels that add information. */
+  eyebrow?: string;
   /** Content title; a two-sentence title puts the second sentence in the gradient. */
   title: string;
   /** One or two sentences under the headline. */
@@ -15,7 +16,7 @@ interface SectionProps {
 }
 
 /**
- * Page section: eyebrow, two-sentence gradient headline, short intro, content.
+ * Page section: optional label, two-sentence headline, short intro, content.
  * Reveals once with ccc-up when it first scrolls into view.
  */
 export function Section({ id, eyebrow, title, intro, children, className = '' }: SectionProps) {
@@ -25,7 +26,7 @@ export function Section({ id, eyebrow, title, intro, children, className = '' }:
   return (
     <section ref={ref} id={id} aria-labelledby={headingId} className={`ccc-reveal scroll-mt-6 ${className}`}>
       <div className="flex max-w-copy flex-col gap-[18px]">
-        <EyebrowLabel>{eyebrow}</EyebrowLabel>
+        {eyebrow && <EyebrowLabel>{eyebrow}</EyebrowLabel>}
         <GradientHeadline as="h2" size="section" id={headingId} lead={lead} gradient={gradient} />
         {intro && <div className="max-w-measure text-body text-ink-body">{intro}</div>}
       </div>

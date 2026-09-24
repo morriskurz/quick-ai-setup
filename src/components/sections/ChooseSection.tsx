@@ -25,7 +25,7 @@ export function ChooseSection({ selection, onToggleAgent, onSetOs }: ChooseSecti
   };
   const showAgentHint = keptLast || selection.agents.length === 0;
   return (
-    <Section id="choose" eyebrow={copy.eyebrow} title={copy.title} intro={<p className="m-0">{copy.intro}</p>}>
+    <Section id="choose" title={copy.title} intro={<p className="m-0">{copy.intro}</p>}>
       <fieldset className="m-0 min-w-0 border-0 p-0">
         <legend className="ccc-visually-hidden">Coding agents</legend>
         <div className="grid gap-3 [grid-template-columns:repeat(auto-fill,minmax(min(100%,240px),1fr))]">

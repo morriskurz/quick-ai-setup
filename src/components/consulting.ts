@@ -3,7 +3,6 @@ import morrisPhoto from '../assets/morris.jpg';
 // COPY: owner review — consulting section. Swap values here; no component code
 // needs to change. Do not add claims beyond these strings.
 export const CONSULTING = {
-  eyebrow: 'AI-readiness consulting',
   lead: 'Setup is step one.',
   gradient: 'Habits make it stick.',
   body: 'I help founders and teams go further: advanced habits, a knowledge system, one setup for the whole team. The first call is free and includes an AI-readiness check.',

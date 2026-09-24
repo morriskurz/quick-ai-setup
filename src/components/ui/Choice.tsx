@@ -43,7 +43,7 @@ export function Choice({ id, checked, onChange, label, summary, tag, warning }: 
         )}
         {warning && (
           <span id={warningId} className="mt-1 border-t border-hairline pt-2.5 text-nav text-ink-body">
-            <span className="font-mono text-meta uppercase tracking-[0.14em] text-cyan">Note </span>
+            <span className="font-mono text-meta text-cyan">Note </span>
             {warning}
           </span>
         )}

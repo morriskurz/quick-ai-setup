@@ -1,5 +1,5 @@
 import { CONSULTING as C } from '../consulting';
-import { Button, EyebrowLabel, GradientHeadline } from '../ds';
+import { Button, GradientHeadline } from '../ds';
 import { useReveal } from '../../hooks/useReveal';
 
 const isExternal = (url: string) => /^https?:\/\//.test(url);
@@ -41,7 +41,6 @@ export function ConsultingSection() {
       </figure>
 
       <div className="flex max-w-copy flex-col items-start gap-[22px]">
-        <EyebrowLabel>{C.eyebrow}</EyebrowLabel>
         <GradientHeadline as="h2" size="section" id="consulting-heading" lead={C.lead} gradient={C.gradient} />
         <p className="m-0 max-w-measure text-body text-ink-body">{C.body}</p>
         <p className="m-0 max-w-measure text-ui leading-[1.65] text-ink-body">{C.bio}</p>

@@ -99,8 +99,7 @@
     gap: 10px;
     font-family: var(--ccc-font-mono);
     font-size: var(--ccc-eyebrow-size);
-    letter-spacing: var(--ccc-eyebrow-ls);
-    text-transform: uppercase;
+    letter-spacing: var(--ccc-footnote-ls);
     color: var(--ccc-cyan);
   }
   .ccc-eyebrow__rule {
@@ -111,11 +110,10 @@
     opacity: 0.7;
   }
 
-  .ccc-gradient-text {
-    background-image: var(--ccc-text-gradient);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+  /* Second headline sentence: solid brand cyan. Replaced the brand's background-clip
+     gradient text (reads as an AI-template tell; owner decision 2026-09-24). */
+  .ccc-headline-accent {
+    color: var(--ccc-cyan);
   }
 
   .ccc-meta {

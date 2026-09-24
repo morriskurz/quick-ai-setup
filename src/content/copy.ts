@@ -13,7 +13,6 @@ export const heroCopy = {
 // COPY: owner review
 export const sectionCopy = {
   agent: {
-    eyebrow: 'Step zero',
     title: 'Start with one coding agent. I recommend Claude Code.',
     intro: 'A coding agent reads your files, runs commands and writes changes on your computer, with your permission.',
     installNote: 'Install and sign in to your agent first, with the steps below. The prompt runs inside it.',
@@ -23,17 +22,14 @@ export const sectionCopy = {
     intro: 'Linux commands are for Debian and Ubuntu.',
   },
   goals: {
-    eyebrow: 'Goals',
     title: 'Tick what you want to do. The setup follows.',
     intro: 'Always included: Git, Node.js, the grill-me skill, Context7 and the house rules.',
   },
   extras: {
-    eyebrow: 'Extras',
     title: 'Two extras, off by default. Add them later.',
     intro: 'Both shorten output to save usage, and both make mistakes harder to spot.',
   },
   setup: {
-    eyebrow: 'Your setup',
     title: 'Copy one prompt. Or run every step yourself.',
     intro: 'The agent installs everything in order, shows each command first and stops when it needs you.',
     copyPromptCta: 'Copy the prompt',
@@ -49,7 +45,6 @@ export const sectionCopy = {
     projectLabel: 'Project template',
   },
   verify: {
-    eyebrow: 'Verify',
     title: 'Check what is installed.',
     intro: 'Run it in a new terminal window. It prints each tool’s version or “not installed”.',
     copyCta: 'Copy the check',
@@ -58,7 +53,6 @@ export const sectionCopy = {
 
 // COPY: owner review
 export const securityCopy = {
-  eyebrow: 'Before you copy',
   title: 'Read what it does. Then run it.',
   blocks: [
     {
