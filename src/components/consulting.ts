@@ -1,4 +1,6 @@
 import morrisPhoto from '../assets/morris.jpg';
+import { consultingDe } from '../content/i18n';
+import type { Lang } from '../content/types';
 
 // COPY: owner review — consulting section. Swap values here; no component code
 // needs to change. Do not add claims beyond these strings.
@@ -20,3 +22,8 @@ export const CONSULTING = {
   bookingUrl: 'https://calendar.app.google/PWuAfbTPyD2exyD6A',
   secondaryLink: { label: 'LinkedIn', href: 'https://www.linkedin.com/in/morris-kurz/' },
 };
+
+/** The consulting config in one language: German text from src/content/de, links and photo from above. */
+export function consultingFor(lang: Lang): typeof CONSULTING {
+  return lang === 'de' ? { ...CONSULTING, ...consultingDe } : CONSULTING;
+}

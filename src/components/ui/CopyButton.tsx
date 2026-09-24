@@ -1,3 +1,4 @@
+import { useContent } from '../../hooks/langContext';
 import { useCopy } from '../../hooks/useCopy';
 import { Button, type ButtonVariant } from '../ds';
 
@@ -19,8 +20,9 @@ interface CopyButtonProps {
  * the result through a polite live region.
  */
 export function CopyButton({ getText, label, ariaLabel, variant = 'ghost', small = false, className, onCopied }: CopyButtonProps) {
+  const { ui } = useContent();
   const { copied, failed, copy } = useCopy();
-  const visible = copied ? 'Copied' : failed ? 'Copy failed' : label;
+  const visible = copied ? ui.copy.copied : failed ? ui.copy.failed : label;
   return (
     <>
       <Button
@@ -33,7 +35,7 @@ export function CopyButton({ getText, label, ariaLabel, variant = 'ghost', small
         {visible}
       </Button>
       <span role="status" aria-live="polite" className="ccc-visually-hidden">
-        {copied ? 'Copied to the clipboard' : failed ? 'Copy failed. Select the text and copy it by hand.' : ''}
+        {copied ? ui.copy.copiedStatus : failed ? ui.copy.failedStatus : ''}
       </span>
     </>
   );

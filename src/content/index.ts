@@ -14,7 +14,7 @@ export { agentLoginStepIds, agents, globalInstructionFiles } from './steps/agent
 export { NVM_VERSION } from './steps/baseline';
 export { BACKUP_STEP_ID, extras, HOUSE_RULES_STEP_ID, RTK_TELEMETRY_DOCS, VERIFY_STEP_ID } from './steps/extras';
 export { FLUTTER_VERSION, goals } from './steps/goals';
-export { ADMIN_NOTE_PREFIX } from './helpers';
+export { ADMIN_NOTE_PREFIX, isAdminNote } from './helpers';
 export { heroCopy, sectionCopy, securityCopy, startCopy } from './copy';
 
 const allSteps: Step[] = [...baselineSteps, ...agentSteps, ...goalSteps, ...extraSteps];

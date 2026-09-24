@@ -1,3 +1,4 @@
+import { useContent } from '../../hooks/langContext';
 import { CopyButton } from './CopyButton';
 
 interface CodeBlockProps {
@@ -15,7 +16,10 @@ interface CodeBlockProps {
 }
 
 /** Hairline mono block with a Docs link and a copy button in its header. */
-export function CodeBlock({ code, label, context, docsUrl, wrap = false, copyLabel = 'Copy', docsLabel = 'Docs', className = '' }: CodeBlockProps) {
+export function CodeBlock({ code, label, context, docsUrl, wrap = false, copyLabel, docsLabel, className = '' }: CodeBlockProps) {
+  const { sectionCopy, ui } = useContent();
+  const copyText = copyLabel ?? ui.copy.label;
+  const docsText = docsLabel ?? sectionCopy.setup.docsLabel;
   return (
     <div className={`ccc-code ${className}`}>
       <div className="ccc-code__head">
@@ -27,12 +31,12 @@ export function CodeBlock({ code, label, context, docsUrl, wrap = false, copyLab
               target="_blank"
               rel="noopener noreferrer"
               className="ccc-link text-nav"
-              aria-label={`${docsLabel} for ${context} (opens in a new tab)`}
+              aria-label={ui.docsFor(docsText, context)}
             >
-              {docsLabel}
+              {docsText}
             </a>
           )}
-          <CopyButton small getText={() => code} label={copyLabel} ariaLabel={`${copyLabel} ${context}`} />
+          <CopyButton small getText={() => code} label={copyText} ariaLabel={`${copyText}: ${context}`} />
         </div>
       </div>
       <pre className={`ccc-code__pre ccc-scroll ${wrap ? 'ccc-code__pre--wrap' : ''}`} tabIndex={0} aria-label={context}>

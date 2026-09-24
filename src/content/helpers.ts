@@ -13,6 +13,14 @@ export const AGENT_ORDER: readonly AgentId[] = ['claude-code', 'codex', 'opencod
  */
 export const ADMIN_NOTE_PREFIX = 'Needs administrator rights';
 
+/** The same prefix in the German dictionary (src/content/de). */
+export const ADMIN_NOTE_PREFIX_DE = 'Braucht Administratorrechte';
+
+/** True for a command note that marks an administrator step, in either language. */
+export function isAdminNote(note: string | undefined): boolean {
+  return !!note && (note.startsWith(ADMIN_NOTE_PREFIX) || note.startsWith(ADMIN_NOTE_PREFIX_DE));
+}
+
 export function adminNote(detail: string): string {
   return `${ADMIN_NOTE_PREFIX}: ${detail}`;
 }

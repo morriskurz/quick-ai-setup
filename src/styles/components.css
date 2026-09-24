@@ -28,6 +28,17 @@
       box-shadow 220ms var(--ccc-ease),
       color 180ms var(--ccc-ease);
   }
+  /* Phones: a label longer than the column wraps inside the button instead of pushing the
+     page sideways (German CTAs such as "Kostenlosen AI-Readiness-Check buchen"). */
+  @media (max-width: 479px) {
+    .ccc-btn {
+      max-width: 100%;
+      white-space: normal;
+      text-align: center;
+      text-wrap: balance;
+      line-height: 1.25;
+    }
+  }
 
   .ccc-btn--primary {
     padding: 14px 26px;
@@ -149,6 +160,40 @@
   }
   @media (hover: hover) {
     .ccc-navlink:hover {
+      color: var(--ccc-text);
+    }
+  }
+
+  /* Language toggle (addition): "EN · DE" in nav type. Active = full ink, inactive = nav ink.
+     Colour-only hover like the nav links; 44px tall hit area without growing the header. */
+  .ccc-lang {
+    display: flex;
+    align-items: center;
+    margin-block: -12px;
+    font-family: var(--ccc-font-sans);
+    font-size: var(--ccc-nav-size);
+  }
+  .ccc-lang__btn {
+    min-height: 44px;
+    padding: 0 6px;
+    border: 0;
+    background: transparent;
+    font: inherit;
+    color: var(--ccc-text-nav);
+    cursor: pointer;
+    touch-action: manipulation;
+    transition: color 180ms var(--ccc-ease);
+  }
+  .ccc-lang__btn[aria-pressed='true'] {
+    color: var(--ccc-text);
+    cursor: default;
+  }
+  .ccc-lang__dot {
+    color: var(--ccc-cyan);
+    opacity: 0.8;
+  }
+  @media (hover: hover) {
+    .ccc-lang__btn:hover {
       color: var(--ccc-text);
     }
   }

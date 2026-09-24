@@ -1,4 +1,4 @@
-import { sectionCopy } from '../../content';
+import { useContent } from '../../hooks/langContext';
 import { EyebrowLabel, MetaRow } from '../ds';
 import { CopyButton } from '../ui/CopyButton';
 import { goToGetStarted } from '../ui/goToGetStarted';
@@ -11,6 +11,7 @@ interface OutputPanelProps {
 
 /** Desktop: sticky live output in the right column. */
 export function OutputPanel({ prompt, meta }: OutputPanelProps) {
+  const { lang, sectionCopy, ui } = useContent();
   return (
     <section
       aria-labelledby="output-heading"
@@ -18,13 +19,14 @@ export function OutputPanel({ prompt, meta }: OutputPanelProps) {
     >
       <div className="flex flex-col gap-2.5">
         <EyebrowLabel as="h2" id="output-heading" className="m-0 font-normal">
-          Your prompt
+          {ui.output.heading}
         </EyebrowLabel>
         <MetaRow items={meta} />
       </div>
       <PromptView
+        key={lang}
         text={prompt}
-        label="Generated prompt"
+        label={ui.output.promptLabel}
         className="min-h-[160px] flex-1 border-y border-hairline py-4"
       />
       <CopyButton variant="primary" label={sectionCopy.setup.copyPromptCta} getText={() => prompt} onCopied={goToGetStarted} className="w-full" />

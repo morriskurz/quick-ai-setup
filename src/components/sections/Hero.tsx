@@ -1,16 +1,10 @@
 import type { CSSProperties } from 'react';
-import { heroCopy } from '../../content';
+import { useContent } from '../../hooks/langContext';
 import { Button, EyebrowLabel, GradientHeadline, MetaRow, MotifBackdrop } from '../ds';
 import { HeroMotif } from '../motif/HeroMotif';
 
-// Headline, subline and primary CTA come from content (heroCopy).
-// COPY: owner review — the eyebrow, secondary CTA and proof line below are UI chrome.
-const HERO_CHROME = {
-  eyebrow: 'Advanced AI setup for anyone',
-  primaryHref: '#choose',
-  secondary: { label: 'See every step', href: '#your-setup' },
-  meta: ['Open source', 'Windows, macOS and Linux'],
-};
+// Headline, subline and primary CTA come from content (heroCopy); the eyebrow, secondary
+// CTA and proof line are UI chrome (ui.hero in src/content/ui.ts and de/copy.ts).
 
 const enter = (delay: number): CSSProperties => ({ '--enter-delay': `${delay}s` }) as CSSProperties;
 
@@ -20,6 +14,7 @@ const enter = (delay: number): CSSProperties => ({ '--enter-delay': `${delay}s` 
  * The copy is plain HTML and paints before three.js is even requested.
  */
 export function Hero() {
+  const { heroCopy, ui } = useContent();
   return (
     <MotifBackdrop
       as="section"
@@ -44,7 +39,7 @@ export function Hero() {
       <div className="mx-auto box-border flex min-h-[100svh] w-full max-w-page flex-col justify-center px-gutter pt-[130px] pb-[100px]">
         <div className="flex max-w-copy flex-col items-start gap-[26px]">
           <EyebrowLabel className="ccc-enter" style={enter(0.22)}>
-            {HERO_CHROME.eyebrow}
+            {ui.hero.eyebrow}
           </EyebrowLabel>
           <GradientHeadline
             id="hero-heading"
@@ -57,14 +52,14 @@ export function Hero() {
             {heroCopy.subline}
           </p>
           <div className="ccc-enter mt-1.5 flex flex-wrap items-center gap-[14px]" style={enter(0.56)}>
-            <Button variant="primary" href={HERO_CHROME.primaryHref}>
+            <Button variant="primary" href="#choose">
               {heroCopy.primaryCta}
             </Button>
-            <Button variant="secondary" href={HERO_CHROME.secondary.href}>
-              {HERO_CHROME.secondary.label}
+            <Button variant="secondary" href="#your-setup">
+              {ui.hero.secondaryCta}
             </Button>
           </div>
-          <MetaRow className="ccc-enter mt-2.5" style={enter(0.68)} items={HERO_CHROME.meta} />
+          <MetaRow className="ccc-enter mt-2.5" style={enter(0.68)} items={[...ui.hero.meta]} />
         </div>
       </div>
     </MotifBackdrop>

@@ -1,5 +1,5 @@
 import { useMemo, type CSSProperties } from 'react';
-import { agents, sectionCopy } from './content';
+import { contentFor } from './content/i18n';
 import { buildAgentPrompt, buildAgentsMd, buildVerifyScript, resolvePlan } from './lib/generate';
 import { NavBar } from './components/ds';
 import { MobileSheet } from './components/output/MobileSheet';
@@ -15,43 +15,49 @@ import { SecuritySection } from './components/sections/SecuritySection';
 import { SetupSection } from './components/sections/SetupSection';
 import { StartSection } from './components/sections/StartSection';
 import { VerifySection } from './components/sections/VerifySection';
+import { LangToggle } from './components/ui/LangToggle';
 import { OS_LABEL } from './components/ui/os';
+import { LangContext } from './hooks/langContext';
+import { useLang } from './hooks/useLang';
 import { useSelection } from './hooks/useSelection';
-
-const NAV_LINKS = [
-  { label: 'Setup', href: '#your-setup' },
-  { label: 'Security', href: '#security' },
-  { label: 'Verify', href: '#verify' },
-];
 
 export default function App() {
   const { selection, toggleAgent, toggleGoal, toggleExtra, setOs } = useSelection();
-
-  const plan = useMemo(() => resolvePlan(selection), [selection]);
-  const prompt = useMemo(() => buildAgentPrompt(selection), [selection]);
-  const agentsMd = useMemo(() => buildAgentsMd(selection), [selection]);
+  const { lang, setLang } = useLang();
+  const plan = useMemo(() => resolvePlan(selection, lang), [selection, lang]);
+  const prompt = useMemo(() => buildAgentPrompt(selection, lang), [selection, lang]);
+  const agentsMd = useMemo(() => buildAgentsMd(selection, lang), [selection, lang]);
   const verifyScript = useMemo(() => buildVerifyScript(selection), [selection]);
+  const { agents, sectionCopy, ui } = contentFor(lang);
 
   const agentLabels = agents.filter((a) => selection.agents.includes(a.id)).map((a) => a.label);
   const meta = [
-    `${plan.steps.length} ${plan.steps.length === 1 ? 'step' : 'steps'}`,
-    agentLabels.length > 0 ? agentLabels.join(', ') : 'No agent',
+    ui.steps(plan.steps.length),
+    agentLabels.length > 0 ? agentLabels.join(', ') : ui.noAgent,
     OS_LABEL[selection.os],
+  ];
+  const navLinks = [
+    { label: ui.nav.setup, href: '#your-setup' },
+    { label: ui.nav.security, href: '#security' },
+    { label: ui.nav.verify, href: '#verify' },
   ];
 
   return (
+    <LangContext value={lang}>
     <div id="top" className="relative pb-[calc(88px+env(safe-area-inset-bottom,0px))] lg:pb-0">
       <a
         href="#choose"
         className="ccc-btn ccc-btn--primary fixed top-3 left-3 z-50 -translate-y-[200%] focus:translate-y-0"
       >
-        Skip to the setup
+        {ui.skipLink}
       </a>
       <NavBar
         className="ccc-enter absolute inset-x-0 top-0 z-30 mx-auto max-w-page"
         style={{ '--enter-delay': '0.1s' } as CSSProperties}
-        links={NAV_LINKS}
+        label={ui.nav.label}
+        links={navLinks}
         cta={{ label: sectionCopy.setup.copyPromptCta, href: '#prompt' }}
+        end={<LangToggle lang={lang} onChange={setLang} label={ui.lang.group} />}
       />
       <main>
         <Hero />
@@ -73,7 +79,7 @@ export default function App() {
               <VerifySection selection={selection} script={verifyScript} onSetOs={setOs} />
               <StartSection selection={selection} />
             </div>
-            <aside aria-label="Live output" className="hidden pt-8 pb-8 lg:block">
+            <aside aria-label={ui.output.aside} className="hidden pt-8 pb-8 lg:block">
               <div className="sticky top-6">
                 <OutputPanel prompt={prompt} meta={meta} />
               </div>
@@ -85,5 +91,6 @@ export default function App() {
       <Footer />
       <MobileSheet prompt={prompt} stepCount={plan.steps.length} />
     </div>
+    </LangContext>
   );
 }

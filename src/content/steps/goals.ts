@@ -13,7 +13,7 @@ export const FLUTTER_VERSION = '3.47.5';
 
 const all = (cmds: Command[]): Partial<Record<OsId, Command[]>> => ({ windows: cmds, macos: cmds, linux: cmds });
 
-const GWS_SERVICES = 'gmail,calendar,drive,docs,sheets';
+export const GWS_SERVICES = 'gmail,calendar,drive,docs,sheets';
 
 export const goalSteps: Step[] = [
   // ── Shared by the "build" goals and document versioning ───────────────────

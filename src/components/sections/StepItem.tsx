@@ -1,12 +1,11 @@
-import { ADMIN_NOTE_PREFIX, HOUSE_RULES_STEP_ID, sectionCopy, VERIFY_STEP_ID } from '../../content';
+import { HOUSE_RULES_STEP_ID, isAdminNote, VERIFY_STEP_ID } from '../../content';
+import { useContent } from '../../hooks/langContext';
 import { needsAdmin, renderCommand } from '../../lib/generate';
 import type { OsId, Selection, Step } from '../../content/types';
 import { EyebrowLabel } from '../ds';
 import { CodeBlock } from '../ui/CodeBlock';
 import { OS_LABEL, OS_SHELL } from '../ui/os';
 import { RichText } from '../ui/RichText';
-
-const copy = sectionCopy.setup;
 
 function hostOf(url: string): string {
   try {
@@ -27,6 +26,8 @@ interface StepItemProps {
 
 /** One manual step: title, why, what you do yourself, the commands for this OS, and any warning. */
 export function StepItem({ step, index, selection, os, verifyScript }: StepItemProps) {
+  const { sectionCopy, ui } = useContent();
+  const copy = sectionCopy.setup;
   const ctx = { agents: selection.agents, os };
   const isVerify = step.id === VERIFY_STEP_ID;
   const commands = step.commands?.[os] ?? [];
@@ -57,7 +58,7 @@ export function StepItem({ step, index, selection, os, verifyScript }: StepItemP
               <CodeBlock
                 code={verifyScript}
                 label={blockLabel}
-                context={`script for ${step.title}`}
+                context={ui.step.scriptFor(step.title)}
                 docsUrl={step.docsUrl}
                 docsLabel={copy.docsLabel}
               />
@@ -65,13 +66,12 @@ export function StepItem({ step, index, selection, os, verifyScript }: StepItemP
               commands.map((cmd, i) => {
                 const text = renderCommand(cmd, ctx);
                 const admin = needsAdmin(cmd, ctx);
-                const noteSaysAdmin = cmd.note?.startsWith(ADMIN_NOTE_PREFIX) ?? false;
-                const context = commands.length > 1 ? `command ${i + 1} for ${step.title}` : `command for ${step.title}`;
+                const noteSaysAdmin = isAdminNote(cmd.note);
+                const context = commands.length > 1 ? ui.step.commandNFor(i + 1, step.title) : ui.step.commandFor(step.title);
                 return (
                   <div key={i} className="flex min-w-0 flex-col gap-2">
                     {admin && !noteSaysAdmin && (
-                      // COPY: owner review
-                      <p className="ccc-meta m-0 text-cyan">Needs administrator rights: your computer asks for your password.</p>
+                      <p className="ccc-meta m-0 text-cyan">{ui.step.adminInline}</p>
                     )}
                     <CodeBlock
                       code={text}
@@ -103,16 +103,15 @@ export function StepItem({ step, index, selection, os, verifyScript }: StepItemP
             {step.human.url && (
               <p className="m-0 text-nav">
                 <a className="ccc-link" href={step.human.url} target="_blank" rel="noopener noreferrer">
-                  Open {hostOf(step.human.url)}
-                  <span className="ccc-visually-hidden"> (opens in a new tab)</span>
+                  {ui.step.openHost(hostOf(step.human.url))}
+                  <span className="ccc-visually-hidden">{ui.newTab}</span>
                 </a>
               </p>
             )}
             {step.id === HOUSE_RULES_STEP_ID && (
               <p className="m-0 text-nav">
-                {/* COPY: owner review */}
                 <a className="ccc-link" href="#house-rules">
-                  See the house rules
+                  {ui.step.seeHouseRules}
                 </a>
               </p>
             )}
@@ -121,11 +120,10 @@ export function StepItem({ step, index, selection, os, verifyScript }: StepItemP
 
         {step.kind === 'command' && !hasRunnable && (
           <p className="m-0 text-nav text-ink-body">
-            {/* COPY: owner review */}
-            No command for {OS_LABEL[os]} here.{' '}
+            {ui.step.noCommand(OS_LABEL[os])}{' '}
             <a className="ccc-link" href={step.docsUrl} target="_blank" rel="noopener noreferrer">
-              Follow the {copy.docsLabel.toLowerCase()}
-              <span className="ccc-visually-hidden"> for {step.title} (opens in a new tab)</span>
+              {ui.step.followDocs}
+              <span className="ccc-visually-hidden">{ui.step.docsForStep(step.title)}</span>
             </a>
             .
           </p>
@@ -135,16 +133,15 @@ export function StepItem({ step, index, selection, os, verifyScript }: StepItemP
           <p className="m-0 text-nav">
             <a className="ccc-link" href={step.docsUrl} target="_blank" rel="noopener noreferrer">
               {copy.docsLabel}
-              <span className="ccc-visually-hidden"> for {step.title} (opens in a new tab)</span>
+              <span className="ccc-visually-hidden">{ui.step.docsForStep(step.title)}</span>
             </a>
           </p>
         )}
 
         {step.warning && (
           <div className="ccc-hairline-card mt-1 flex flex-col gap-2 border-cyan-35 p-4">
-            {/* COPY: owner review */}
             <EyebrowLabel as="p" rule={false} className="m-0">
-              Warning
+              {ui.step.warning}
             </EyebrowLabel>
             <p className="m-0 text-ui leading-[1.65] text-ink">
               <RichText text={step.warning} />

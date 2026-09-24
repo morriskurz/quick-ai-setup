@@ -4,6 +4,9 @@
  * them without coordinating across all three.
  */
 
+/** Page language. English is the source of truth; German is a dictionary over the same ids. */
+export type Lang = 'en' | 'de';
+
 export type AgentId = 'claude-code' | 'codex' | 'opencode';
 export type OsId = 'windows' | 'macos' | 'linux';
 export type GoalId =

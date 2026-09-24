@@ -10,13 +10,15 @@ interface ChoiceProps {
   tag?: string;
   /** Shown under the summary, always visible (extras carry one). */
   warning?: ReactNode;
+  /** Mono label before the warning ("Note"). */
+  warningLabel?: string;
 }
 
 /**
  * Checkbox row. A real <input type="checkbox"> stays in the DOM, visually
  * hidden; the hairline square is decoration driven by :checked.
  */
-export function Choice({ id, checked, onChange, label, summary, tag, warning }: ChoiceProps) {
+export function Choice({ id, checked, onChange, label, summary, tag, warning, warningLabel = 'Note' }: ChoiceProps) {
   const summaryId = summary ? `${id}-summary` : undefined;
   const warningId = warning ? `${id}-warning` : undefined;
   const describedBy = [summaryId, warningId].filter(Boolean).join(' ') || undefined;
@@ -43,7 +45,7 @@ export function Choice({ id, checked, onChange, label, summary, tag, warning }: 
         )}
         {warning && (
           <span id={warningId} className="mt-1 border-t border-hairline pt-2.5 text-nav text-ink-body">
-            <span className="font-mono text-meta text-cyan">Note </span>
+            <span className="font-mono text-meta text-cyan">{warningLabel} </span>
             {warning}
           </span>
         )}

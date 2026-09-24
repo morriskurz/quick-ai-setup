@@ -1,4 +1,5 @@
-import { CONSULTING as C } from '../consulting';
+import { consultingFor } from '../consulting';
+import { useContent } from '../../hooks/langContext';
 import { Button, GradientHeadline } from '../ds';
 import { useReveal } from '../../hooks/useReveal';
 
@@ -9,6 +10,8 @@ const isExternal = (url: string) => /^https?:\/\//.test(url);
  * shows in natural colour (owner's choice, overriding the brand's photo grade).
  */
 export function ConsultingSection() {
+  const { lang, ui } = useContent();
+  const C = consultingFor(lang);
   const ref = useReveal<HTMLElement>();
   const external = isExternal(C.bookingUrl);
   return (
@@ -31,7 +34,7 @@ export function ConsultingSection() {
               className="ccc-photo__img"
             />
           ) : (
-            <span className="ccc-photo__empty ccc-meta">Photo</span>
+            <span className="ccc-photo__empty ccc-meta">{ui.consulting.photoPlaceholder}</span>
           )}
         </div>
         <figcaption className="mt-4 flex flex-col gap-1">
@@ -51,11 +54,11 @@ export function ConsultingSection() {
             {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
           >
             {C.cta}
-            {external && <span className="ccc-visually-hidden"> (opens in a new tab)</span>}
+            {external && <span className="ccc-visually-hidden">{ui.newTab}</span>}
           </Button>
           <a className="ccc-link text-ui" href={C.secondaryLink.href} target="_blank" rel="noopener noreferrer">
             {C.secondaryLink.label}
-            <span className="ccc-visually-hidden"> (opens in a new tab)</span>
+            <span className="ccc-visually-hidden">{ui.newTab}</span>
           </a>
         </div>
       </div>

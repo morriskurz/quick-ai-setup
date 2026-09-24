@@ -1,4 +1,5 @@
-import { agents, globalInstructionFiles, sectionCopy } from '../../content';
+import { globalInstructionFiles } from '../../content';
+import { useContent } from '../../hooks/langContext';
 import type { Selection } from '../../content/types';
 import type { buildAgentsMd } from '../../lib/generate';
 import { CodeBlock } from '../ui/CodeBlock';
@@ -9,10 +10,10 @@ interface AgentsMdSectionProps {
   selection: Selection;
 }
 
-const copy = sectionCopy.houseRules;
-
 /** House rules: the global rules, where each picked agent keeps them, and the project template. */
 export function AgentsMdSection({ files, selection }: AgentsMdSectionProps) {
+  const { agents, sectionCopy, ui } = useContent();
+  const copy = sectionCopy.houseRules;
   const picked = agents.filter((a) => selection.agents.includes(a.id));
   return (
     <Section id="house-rules" title={copy.title} intro={<p className="m-0">{copy.intro}</p>}>
@@ -31,7 +32,7 @@ export function AgentsMdSection({ files, selection }: AgentsMdSectionProps) {
                     </code>
                     <a className="ccc-link" href={f.docsUrl} target="_blank" rel="noopener noreferrer">
                       {sectionCopy.setup.docsLabel}
-                      <span className="ccc-visually-hidden"> for {a.label} instruction files (opens in a new tab)</span>
+                      <span className="ccc-visually-hidden">{ui.houseRules.docsForAgent(a.label)}</span>
                     </a>
                   </li>
                 );

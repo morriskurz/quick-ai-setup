@@ -131,8 +131,18 @@ The still PNG motifs are not available in this repo; the live scene is the motif
 9. **Photography (consulting section)** — the brand's first photographic surface. **Owner override:** the brand readme (Imagery) says a photo "must be graded cool and dark and sit under the same vignette + grain"; the owner chose natural colour for his portrait instead. `.ccc-photo` therefore applies no filter, no cyan colour-blend tint, no vignette and no grain.
    Frame: hairline, 10px radius, no circle crop, no shadow; explicit width/height and `loading="lazy"`.
 10. **Mobile basics** — `100svh` hero, `dvh` for the sheet, inputs at 16px, tap highlight off, `touch-action: manipulation` on controls, `viewport-fit=cover`, `theme-color` `#010808`.
+11. **Language toggle** (`.ccc-lang`, `LangToggle`) — "EN · DE" in nav type at the far right of the header, visible at every width: two real buttons with `aria-pressed`, the active one at full ink, the other at nav ink, cyan middot between. 44px hit area, colour-only hover. No flags, icons or pills.
+12. **Buttons wrap on phones** — below 480px `.ccc-btn` may wrap (centred, balanced, line-height 1.25) so long German CTAs never push the page sideways.
 
 ## Content boundary
+
+Languages: English is the source of truth in the existing content files; German lives in
+`src/content/de/` keyed by the same ids (step prose, command notes by English text, agents,
+goals, extras, page copy, chrome in `ui.ts`, prompt prose, project template). Commands, URLs,
+ids and order exist only in the English data. Components read copy through `useContent()`
+(`src/hooks/langContext.ts`); the generator takes a trailing `lang`. The global house rules
+stay English in both languages. `src/content/i18n.test.ts` fails on any missing German key
+and on "du"/"wir" forms.
 
 The UI consumes content only through `src/content/index.ts` and
 `src/lib/generate.ts`. Page copy comes from `heroCopy`, `sectionCopy` and

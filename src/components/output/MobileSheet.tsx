@@ -1,4 +1,4 @@
-import { sectionCopy } from '../../content';
+import { useContent } from '../../hooks/langContext';
 import { useEffect, useId, useState } from 'react';
 import { CopyButton } from '../ui/CopyButton';
 import { goToGetStarted } from '../ui/goToGetStarted';
@@ -15,6 +15,7 @@ interface MobileSheetProps {
  * content is inert so it is skipped by keyboard and screen readers.
  */
 export function MobileSheet({ prompt, stepCount }: MobileSheetProps) {
+  const { lang, sectionCopy, ui } = useContent();
   const [open, setOpen] = useState(false);
   const bodyId = useId();
 
@@ -29,13 +30,13 @@ export function MobileSheet({ prompt, stepCount }: MobileSheetProps) {
 
   return (
     <section
-      aria-label="Your prompt"
+      aria-label={ui.output.heading}
       className="ccc-sheet fixed inset-x-0 bottom-0 z-40 border-t border-hairline bg-page lg:hidden"
     >
       <div id={bodyId} className="ccc-sheet__body" data-open={open || undefined} inert={!open}>
         <div className="min-h-0 overflow-hidden">
           <div className="px-gutter pt-4">
-            <PromptView text={prompt} label="Generated prompt" className="max-h-[min(58dvh,520px)] pb-2" />
+            <PromptView key={lang} text={prompt} label={ui.output.promptLabel} className="max-h-[min(58dvh,520px)] pb-2" />
           </div>
         </div>
       </div>
@@ -48,9 +49,9 @@ export function MobileSheet({ prompt, stepCount }: MobileSheetProps) {
           className="ccc-sheet__toggle flex min-w-0 flex-1 flex-col items-start gap-0.5 border-0 bg-transparent p-0 text-left"
         >
           <span key={stepCount} className="ccc-fade ccc-meta">
-            {stepCount} {stepCount === 1 ? 'step' : 'steps'}
+            {ui.steps(stepCount)}
           </span>
-          <span className="text-nav font-medium">{open ? 'Hide the prompt' : 'Show the prompt'}</span>
+          <span className="text-nav font-medium">{open ? ui.output.hide : ui.output.show}</span>
         </button>
         <CopyButton variant="primary" label={sectionCopy.setup.copyPromptCta} getText={() => prompt}
           onCopied={() => {

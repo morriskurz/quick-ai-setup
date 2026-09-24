@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { agents, sectionCopy } from '../../content';
+import { useContent } from '../../hooks/langContext';
 import type { AgentId, OsId, Selection } from '../../content/types';
 import { OS_IDS } from '../../hooks/selectionStore';
 import { Choice } from '../ui/Choice';
@@ -12,10 +12,10 @@ interface ChooseSectionProps {
   onSetOs: (os: OsId) => void;
 }
 
-const { agent: copy, os: osCopy } = sectionCopy;
-
 /** Step zero: which coding agent(s), and which computer. */
 export function ChooseSection({ selection, onToggleAgent, onSetOs }: ChooseSectionProps) {
+  const { agents, sectionCopy, ui } = useContent();
+  const { agent: copy, os: osCopy } = sectionCopy;
   // At least one agent stays selected: unticking the last one is refused and explained.
   const [keptLast, setKeptLast] = useState(false);
   const toggleAgent = (id: AgentId) => {
@@ -27,7 +27,7 @@ export function ChooseSection({ selection, onToggleAgent, onSetOs }: ChooseSecti
   return (
     <Section id="choose" title={copy.title} intro={<p className="m-0">{copy.intro}</p>}>
       <fieldset className="m-0 min-w-0 border-0 p-0">
-        <legend className="ccc-visually-hidden">Coding agents</legend>
+        <legend className="ccc-visually-hidden">{ui.choose.agentsLegend}</legend>
         <div className="grid gap-3 [grid-template-columns:repeat(auto-fill,minmax(min(100%,240px),1fr))]">
           {agents.map((a) => (
             <Choice
@@ -36,14 +36,14 @@ export function ChooseSection({ selection, onToggleAgent, onSetOs }: ChooseSecti
               checked={selection.agents.includes(a.id)}
               onChange={() => toggleAgent(a.id)}
               label={a.label}
-              tag={a.recommended ? 'recommended' : undefined}
+              tag={a.recommended ? ui.choose.recommended : undefined}
               summary={a.summary}
             />
           ))}
         </div>
         {/* COPY: owner review. Live region is always mounted so screen readers announce the hint. */}
         <p role="status" className={showAgentHint ? 'mt-4 mb-0 text-nav text-ink-body' : 'm-0'}>
-          {showAgentHint ? 'Keep at least one agent selected.' : ''}
+          {showAgentHint ? ui.choose.keepOneAgent : ''}
         </p>
       </fieldset>
 
@@ -65,8 +65,7 @@ export function ChooseSection({ selection, onToggleAgent, onSetOs }: ChooseSecti
             </label>
           ))}
         </div>
-        {/* COPY: owner review */}
-        <p className="mt-3 mb-0 text-nav text-ink-muted">Detected from your browser.</p>
+        <p className="mt-3 mb-0 text-nav text-ink-muted">{ui.choose.detectedOs}</p>
       </fieldset>
     </Section>
   );

@@ -14,7 +14,8 @@ import {
 } from '../content';
 import { splitTitle } from '../components/ui/headline';
 import type { AgentId, OsId, Selection } from '../content/types';
-import { buildAgentPrompt, buildAgentsMd, buildVerifyScript, needsAdmin, renderCommand, resolvePlan } from './generate';
+import { PROMPT_DE } from '../content/de/prompt';
+import { buildAgentPrompt, buildAgentsMd, buildVerifyScript, needsAdmin, PROMPT_EN, renderCommand, resolvePlan } from './generate';
 
 const ALL_AGENTS: AgentId[] = ['claude-code', 'codex', 'opencode'];
 const OSES: OsId[] = ['windows', 'macos', 'linux'];
@@ -397,5 +398,102 @@ describe('regressions from the second verification pass', () => {
 
   it('RTK for OpenCode says it installs only the OpenCode plugin', () => {
     expect(steps['rtk-init-opencode'].why).toContain('no Claude Code hook');
+  });
+});
+
+describe('German prompt keeps every safety rule', () => {
+  const full = (os: OsId): Selection => sel({ os, agents: ALL_AGENTS, goals: ALL_GOALS, extras: ALL_EXTRAS });
+  /** The code blocks of a prompt: commands, scripts and files, which never change with the language. */
+  const codeBlocks = (prompt: string) =>
+    [...prompt.matchAll(/^( *)~~~(\w*)\n([\s\S]*?)\n\1~~~$/gm)].filter((m) => m[2] !== 'markdown').map((m) => m[3]);
+
+  it('answers in German and has the same rules, in the same order', () => {
+    const prompt = buildAgentPrompt(sel(), 'de');
+    expect(prompt.split('\n')[0]).toContain('Antworten Sie mir auf Deutsch');
+    expect(PROMPT_DE.rules).toHaveLength(PROMPT_EN.rules.length);
+    for (const phrase of [
+      'Zeigen Sie jeden Befehl, bevor Sie ihn ausführen, und sagen Sie in einem Satz, was er tut.',
+      'Wechseln Sie nie eigenmächtig zu einem anderen Installer.',
+      'Tippen, erfragen oder speichern Sie nie Passwörter, Tokens, Schlüssel oder Einmalcodes',
+      'Wenn ein Schritt STOP sagt, halten Sie an.',
+      'Führen Sie sudo- oder Administratorbefehle nie selbst aus. Zeigen Sie sie mir, STOP,',
+      'Wartet ein Befehl auf eine Eingabe, die Sie nicht geben können, brechen Sie ihn ab und fragen Sie mich.',
+      'Löschen Sie keine Dateien',
+      'Fassen Sie kurz zusammen',
+    ]) {
+      expect(prompt, phrase).toContain(phrase);
+    }
+  });
+
+  it('has a STOP for every human step, on every OS', () => {
+    for (const os of OSES) {
+      const s = full(os);
+      const prompt = buildAgentPrompt(s, 'de');
+      const humans = resolvePlan(s, 'de').steps.filter((st) => st.kind === 'human' && st.id !== HOUSE_RULES_STEP_ID);
+      expect(humans.length).toBeGreaterThan(3);
+      for (const h of humans) expect(prompt, `${os}:${h.id}`).toContain(`${h.title} — STOP`);
+    }
+  });
+
+  it('turns every sudo or admin command into a stop-and-ask', () => {
+    for (const os of OSES) {
+      const s = sel({ os, goals: ALL_GOALS });
+      const ctx = { agents: s.agents, os: s.os };
+      const adminCount = resolvePlan(s, 'de')
+        .steps.filter((st) => st.kind === 'command')
+        .flatMap((st) => st.commands?.[os] ?? [])
+        .filter((c) => needsAdmin(c, ctx)).length;
+      const englishCount = buildAgentPrompt(s).match(/STOP: this needs administrator rights/g)?.length ?? 0;
+      expect(adminCount, os).toBe(englishCount);
+      expect(buildAgentPrompt(s, 'de').match(/STOP: Das braucht Administratorrechte/g)?.length ?? 0, os).toBe(adminCount);
+    }
+  });
+
+  it('backs up before Context7, RTK, Caveman and the house rules', () => {
+    for (const os of OSES) {
+      const prompt = buildAgentPrompt(full(os), 'de');
+      const backup = prompt.indexOf('Die Instruktionsdateien Ihrer Agenten sichern');
+      expect(backup).toBeGreaterThan(-1);
+      for (const marker of ['ctx7 setup', 'rtk init', 'JuliusBrussee/caveman', 'Schreiben Sie die Hausregeln']) {
+        expect(prompt.indexOf(marker), `${os}:${marker}`).toBeGreaterThan(backup);
+      }
+    }
+  });
+
+  it('runs exactly the same commands as the English prompt', () => {
+    for (const os of OSES) {
+      for (const s of [full(os), sel({ os }), sel({ os, agents: ['codex'], goals: ['browser-automation'] })]) {
+        expect(codeBlocks(buildAgentPrompt(s)).length).toBeGreaterThan(5);
+        expect(codeBlocks(buildAgentPrompt(s, 'de'))).toEqual(codeBlocks(buildAgentPrompt(s)));
+        expect(resolvePlan(s, 'de').steps.map((x) => x.id)).toEqual(ids(s));
+      }
+    }
+  });
+
+  it('ends by telling the user how to start with grill-me, per agent', () => {
+    const claude = buildAgentPrompt(sel(), 'de');
+    expect(claude.trimEnd().split('\n').pop()).toContain('Claude Code in einem Projektordner neu starten und /grill-me tippen');
+    const codex = buildAgentPrompt(sel({ agents: ['codex'] }), 'de');
+    expect(codex.trimEnd().split('\n').pop()).toContain('„Den grill-me-Skill verwenden:“');
+    expect(codex).not.toContain('/grill-me');
+  });
+
+  it('keeps the RTK telemetry question with the user', () => {
+    const prompt = buildAgentPrompt(sel({ agents: ALL_AGENTS, extras: ['rtk'] }), 'de');
+    expect(prompt).toContain('Das beantworten nur Sie; ein Agent hält an und fragt Sie.');
+  });
+
+  it('uses the German template and keeps the owner’s rules English and verbatim', () => {
+    const prompt = buildAgentPrompt(sel({ agents: ['claude-code', 'codex'], goals: ['websites'] }), 'de');
+    expect(prompt).toContain('## Verification Protocol');
+    expect(prompt).toContain('Übernehmen Sie sie wörtlich');
+    expect(prompt).toContain('In AGENTS.md-Dateien lautet die erste Zeile „# Working Rules“');
+    expect(prompt).toContain('# Projektregeln');
+    expect(prompt).toContain('pnpm verwenden, nicht npm');
+    expect(prompt).toContain('als AGENTS.md und CLAUDE.md kopieren');
+  });
+
+  it('refreshes PATH on Windows', () => {
+    expect(buildAgentPrompt(sel({ os: 'windows' }), 'de')).toContain("GetEnvironmentVariable('Path','User')");
   });
 });
