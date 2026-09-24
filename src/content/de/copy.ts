@@ -1,6 +1,6 @@
 // German page copy, component chrome and consulting text. Same shape as the English
 // objects in ../copy.ts, ../ui.ts and components/consulting.ts (the types enforce it).
-// Formal "Sie"; the owner speaks as "ich". COPY: owner review — everything in this file.
+// Informal "du" (owner decision 2026-09-24); the owner speaks as "ich". COPY: owner review — everything in this file.
 
 import type { heroCopy, sectionCopy, securityCopy, startCopy } from '../copy';
 import type { AgentId } from '../types';
@@ -17,40 +17,40 @@ export const heroCopyDe: Widen<typeof heroCopy> = {
 
 export const sectionCopyDe: Widen<typeof sectionCopy> = {
   agent: {
-    title: 'Mit einem Coding-Agenten beginnen. Ich empfehle Claude Code.',
-    intro: 'Ein Coding-Agent liest Ihre Dateien, führt Befehle aus und schreibt Änderungen auf Ihrem Computer, mit Ihrer Erlaubnis.',
-    installNote: 'Installieren Sie zuerst Ihren Agenten und melden Sie sich an, mit den Schritten unten. Der Prompt läuft darin.',
+    title: 'Beginne mit einem Coding-Agenten. Ich empfehle Claude Code.',
+    intro: 'Ein Coding-Agent liest deine Dateien, führt Befehle aus und schreibt Änderungen auf deinem Computer, mit deiner Erlaubnis.',
+    installNote: 'Installiere zuerst deinen Agenten und melde dich an, mit den Schritten unten. Der Prompt läuft darin.',
   },
   os: {
-    title: 'Ihr Computer',
+    title: 'Dein Computer',
     intro: 'Die Linux-Befehle gelten für Debian und Ubuntu.',
   },
   goals: {
-    title: 'Ankreuzen, was Sie vorhaben. Das Setup folgt.',
+    title: 'Kreuz an, was du vorhast. Das Setup folgt.',
     intro: 'Immer dabei: Git, Node.js, der grill-me-Skill, Context7 und die Hausregeln.',
   },
   extras: {
-    title: 'Zwei Extras, standardmäßig aus. Später ergänzen.',
+    title: 'Zwei Extras, standardmäßig aus. Ergänze sie später.',
     intro: 'Beide kürzen die Ausgabe, um Nutzung zu sparen, und bei beiden fallen Fehler schwerer auf.',
   },
   setup: {
-    title: 'Einen Prompt kopieren. Oder jeden Schritt selbst ausführen.',
-    intro: 'Der Agent installiert alles der Reihe nach, zeigt jeden Befehl vorher und hält an, wenn er Sie braucht.',
+    title: 'Kopiere einen Prompt. Oder führe jeden Schritt selbst aus.',
+    intro: 'Der Agent installiert alles der Reihe nach, zeigt jeden Befehl vorher und hält an, wenn er dich braucht.',
     copyPromptCta: 'Prompt kopieren',
-    humanStepLabel: 'Das machen Sie',
+    humanStepLabel: 'Das machst du',
     commandStepLabel: 'Ausführen',
     docsLabel: 'Anleitung',
   },
   houseRules: {
     title: 'Hausregeln, einmal geschrieben. In jeder Sitzung gelesen.',
     intro:
-      'Der Prompt hängt die globalen Regeln an die Instruktionsdatei jedes Agenten an; die Projektvorlage kopieren Sie in jedes neue Projekt als AGENTS.md und CLAUDE.md.',
+      'Der Prompt hängt die globalen Regeln an die Instruktionsdatei jedes Agenten an; die Projektvorlage kopierst du in jedes neue Projekt als AGENTS.md und CLAUDE.md.',
     globalLabel: 'Globale Regeln',
     projectLabel: 'Projektvorlage',
   },
   verify: {
-    title: 'Prüfen, was installiert ist.',
-    intro: 'Führen Sie es in einem neuen Terminal-Fenster aus. Es gibt die Version jedes Tools aus oder „not installed“.',
+    title: 'Prüfe, was installiert ist.',
+    intro: 'Führe es in einem neuen Terminal-Fenster aus. Es gibt die Version jedes Tools aus oder „not installed“.',
     copyCta: 'Prüfung kopieren',
   },
 };
@@ -59,40 +59,40 @@ export const sectionCopyDe: Widen<typeof sectionCopy> = {
 export const securityCopyDe: Omit<Widen<typeof securityCopy>, 'permissionModes'> & {
   permissionModes: Record<AgentId, string>;
 } = {
-  title: 'Lesen, was es tut. Dann ausführen.',
+  title: 'Lies, was es tut. Dann führ es aus.',
   blocks: [
     {
       title: 'Was der Prompt tut',
-      body: 'Er installiert die Tools aus Ihrem Setup, fügt die gewählten Skills hinzu und hängt die Hausregeln an die Instruktionsdatei jedes Agenten an, nach einem Backup. Er legt keine Konten an und gibt keine Passwörter ein: Bei Registrierung, Anmeldung und Ihrem Computer-Passwort hält er an und fragt Sie.',
+      body: 'Er installiert die Tools aus deinem Setup, fügt die gewählten Skills hinzu und hängt die Hausregeln an die Instruktionsdatei jedes Agenten an, nach einem Backup. Er legt keine Konten an und gibt keine Passwörter ein: Bei Registrierung, Anmeldung und deinem Computer-Passwort hält er an und fragt dich.',
     },
     {
-      title: 'Befehle lesen, bevor Sie zustimmen',
-      body: 'Ihr Agent zeigt jeden Befehl vorher. Stellen Sie drei Fragen. Woher lädt er herunter? Jeder Befehl hier nutzt die eigene Domain des Herstellers, etwa claude.ai, chatgpt.com, opencode.ai, astral.sh, vite.plus, github.com, npmjs.com oder google.com. Braucht er Administratorrechte? Dann führen Sie ihn selbst aus. Löscht er etwas? Nichts hier tut das; sehen Sie rm, del oder Remove-Item, fragen Sie nach dem Grund.',
+      title: 'Befehle lesen, bevor du zustimmst',
+      body: 'Dein Agent zeigt jeden Befehl vorher. Stell drei Fragen. Woher lädt er herunter? Jeder Befehl hier nutzt die eigene Domain des Herstellers, etwa claude.ai, chatgpt.com, opencode.ai, astral.sh, vite.plus, github.com, npmjs.com oder google.com. Braucht er Administratorrechte? Dann führst du ihn selbst aus. Löscht er etwas? Nichts hier tut das; siehst du rm, del oder Remove-Item, frag nach dem Grund.',
     },
     {
-      title: 'Wie Ihr Agent um Erlaubnis fragt',
-      body: 'Prüfen Sie den Modus Ihres Agenten, bevor Sie den Prompt einfügen.',
+      title: 'Wie dein Agent um Erlaubnis fragt',
+      body: 'Prüfe den Modus deines Agenten, bevor du den Prompt einfügst.',
     },
   ],
   permissionModes: {
     'claude-code':
-      'Pro-, Max- und Team-Pläne starten im Auto-Modus, in dem ein zweites Modell jede Aktion prüft statt Sie. Starten Sie Claude Code für dieses Setup mit claude --permission-mode default, dann wartet jeder Befehl auf Ihr Ja. Shift+Tab wechselt den Modus.',
+      'Pro-, Max- und Team-Pläne starten im Auto-Modus, in dem ein zweites Modell jede Aktion prüft, nicht du. Starte Claude Code für dieses Setup mit claude --permission-mode default, dann wartet jeder Befehl auf dein Ja. Shift+Tab wechselt den Modus.',
     codex:
-      'Standardmäßig fragt Codex, bevor es das Netzwerk nutzt oder außerhalb des aktuellen Ordners schreibt. Installieren tut beides, rechnen Sie also damit, die meisten Schritte zu bestätigen. /permissions ändert den Modus.',
+      'Standardmäßig fragt Codex, bevor es das Netzwerk nutzt oder außerhalb des aktuellen Ordners schreibt. Installieren tut beides, rechne also damit, die meisten Schritte zu bestätigen. /permissions ändert den Modus.',
     opencode:
-      'Standardmäßig führt OpenCode Befehle aus und bearbeitet Dateien, ohne zu fragen. Drücken Sie Tab für den schreibgeschützten Plan-Agenten, oder setzen Sie "bash": "ask" und "edit": "ask" unter "permission" in opencode.json.',
+      'Standardmäßig führt OpenCode Befehle aus und bearbeitet Dateien, ohne zu fragen. Drück Tab für den schreibgeschützten Plan-Agenten, oder setz "bash": "ask" und "edit": "ask" unter "permission" in opencode.json.',
   },
   trust:
-    'Skills sind Anweisungen, denen Ihr Agent folgt. Diese stammen von Anthropic, Cloudflare, Vercel Labs, der GitHub-Organisation googleworkspace und namentlich genannten Autoren. Die Dokument-Skills von Anthropic sind source-available, nicht Open Source. Die Google Workspace CLI gibt selbst an, kein offiziell unterstütztes Google-Produkt zu sein.',
+    'Skills sind Anweisungen, denen dein Agent folgt. Diese stammen von Anthropic, Cloudflare, Vercel Labs, der GitHub-Organisation googleworkspace und namentlich genannten Autoren. Die Dokument-Skills von Anthropic sind source-available, nicht Open Source. Die Google Workspace CLI gibt selbst an, kein offiziell unterstütztes Google-Produkt zu sein.',
 };
 
 export const startCopyDe: Widen<typeof startCopy> = {
-  eyebrow: 'So fangen Sie an',
-  title: 'Agent neu starten. Dann sagen, was Sie wollen.',
+  eyebrow: 'So fängst du an',
+  title: 'Starte deinen Agenten neu. Dann sag, was du willst.',
   intro:
-    'Öffnen Sie ein Terminal in einem Projektordner und starten Sie Ihren Agenten. Tippen Sie /grill-me und dahinter, was Sie erreichen wollen: Er befragt Sie zuerst und baut dann.',
+    'Öffne ein Terminal in einem Projektordner und starte deinen Agenten. Tippe /grill-me und dahinter, was du erreichen willst: Er befragt dich zuerst und baut dann.',
   example: '/grill-me Ein wöchentlicher Verkaufsbericht aus meinen Excel-Exporten',
-  otherAgents: 'Codex und OpenCode: Tippen Sie „Den grill-me-Skill verwenden:“ und dahinter, was Sie wollen.',
+  otherAgents: 'Codex und OpenCode: Tippe „Nutze den grill-me-Skill:“ und dahinter, was du willst.',
 };
 
 /** Text fields of components/consulting.ts; links, photo and sizes stay in the English config. */
@@ -128,7 +128,7 @@ export const uiCopyDe: UiCopy = {
   noAgent: 'Kein Agent',
   output: {
     aside: 'Live-Ausgabe',
-    heading: 'Ihr Prompt',
+    heading: 'Dein Prompt',
     promptLabel: 'Generierter Prompt',
     show: 'Prompt anzeigen',
     hide: 'Prompt ausblenden',
@@ -138,14 +138,14 @@ export const uiCopyDe: UiCopy = {
     copied: 'Kopiert',
     failed: 'Fehlgeschlagen',
     copiedStatus: 'In die Zwischenablage kopiert',
-    failedStatus: 'Kopieren fehlgeschlagen. Markieren Sie den Text und kopieren Sie ihn von Hand.',
+    failedStatus: 'Kopieren fehlgeschlagen. Markiere den Text und kopiere ihn von Hand.',
   },
   docsFor: (docs, context) => `${docs} zu ${context} (öffnet in neuem Tab)`,
   choose: {
     agentsLegend: 'Coding-Agenten',
     recommended: 'empfohlen',
-    keepOneAgent: 'Lassen Sie mindestens einen Agenten ausgewählt.',
-    detectedOs: 'Aus Ihrem Browser erkannt.',
+    keepOneAgent: 'Lass mindestens einen Agenten ausgewählt.',
+    detectedOs: 'Aus deinem Browser erkannt.',
   },
   goalsLegend: 'Ziele',
   extras: {
@@ -155,7 +155,7 @@ export const uiCopyDe: UiCopy = {
   },
   security: {
     count: (total, auto, human) =>
-      `Ihr Setup hat ${total} ${total === 1 ? 'Schritt' : 'Schritte'}: ${auto} kann der Agent ausführen, ${human} erledigen Sie selbst.`,
+      `Dein Setup hat ${total} ${total === 1 ? 'Schritt' : 'Schritte'}: ${auto} kann der Agent ausführen, ${human} erledigst du selbst.`,
     permissionDocs: 'Berechtigungen in der Dokumentation',
     permissionDocsFor: (agent) => ` für ${agent} (öffnet in neuem Tab)`,
   },
@@ -168,11 +168,11 @@ export const uiCopyDe: UiCopy = {
     commandFor: (title) => `Befehl für „${title}“`,
     commandNFor: (n, title) => `Befehl ${n} für „${title}“`,
     scriptFor: (title) => `Skript für „${title}“`,
-    adminInline: 'Braucht Administratorrechte: Ihr Computer fragt nach Ihrem Passwort.',
+    adminInline: 'Braucht Administratorrechte: Dein Computer fragt nach deinem Passwort.',
     openHost: (host) => `${host} öffnen`,
     seeHouseRules: 'Zu den Hausregeln',
     noCommand: (os) => `Für ${os} gibt es hier keinen Befehl.`,
-    followDocs: 'Folgen Sie der offiziellen Dokumentation',
+    followDocs: 'Folge der offiziellen Dokumentation',
     docsForStep: (title) => ` zu „${title}“ (öffnet in neuem Tab)`,
     warning: 'Achtung',
   },

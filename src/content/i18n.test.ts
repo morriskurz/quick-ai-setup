@@ -144,8 +144,11 @@ describe('German dictionary is complete (no silent English fallback)', () => {
   });
 });
 
-/** Informal "du" and the corporate "wir" (the owner speaks as "ich"), as whole words only. */
-const FORBIDDEN = /(?<![\p{L}\p{N}_-])(du|dich|dir|dein\p{L}*|euch|euer|eure\p{L}*|wir|uns|unser\p{L}*)(?![\p{L}\p{N}_-])/iu;
+/** Formal address (the German version uses "du", owner decision 2026-09-24). Case-sensitive: lowercase "sie"/"ihr" (they/their) stays allowed. */
+const FORMAL = /(?<![\p{L}\p{N}_-])(Sie|Ihnen|Ihr|Ihre|Ihrem|Ihren|Ihrer|Ihres)(?![\p{L}\p{N}_-])/u;
+
+/** The corporate "wir"; the owner speaks as "ich". */
+const WE = /(?<![\p{L}\p{N}_-])(wir|uns|unser\p{L}*)(?![\p{L}\p{N}_-])/iu;
 
 const withoutFences = (text: string) => text.replace(/~~~[\s\S]*?~~~/g, '');
 
@@ -169,18 +172,16 @@ describe('German voice', () => {
     ...(['windows', 'macos', 'linux'] as const).map((os) => withoutFences(buildAgentPrompt(fullSelection(os), 'de'))),
   ];
 
-  it('the regex catches what it should and spares look-alikes', () => {
-    for (const bad of ['Hast du Zeit?', 'Wir helfen', 'für dich', 'Deine Daten', 'bei uns', 'unsere Kunden']) {
-      expect(bad).toMatch(FORBIDDEN);
-    }
-    for (const ok of ['Durchlauf', 'Dürfen', 'direkt', 'Dienst', 'Dirigent', 'winget', 'Wirkung', 'dual', 'unsicher']) {
-      expect(ok).not.toMatch(FORBIDDEN);
-    }
+  it('the regexes catch what they should and spare look-alikes', () => {
+    for (const bad of ['Führen Sie das aus', 'Ihr Agent', 'mit Ihrem Konto', 'Ihnen']) expect(bad).toMatch(FORMAL);
+    for (const ok of ['sie liegen', 'ihr Ordner', 'Siebenmal', 'Ihrig']) expect(ok).not.toMatch(FORMAL);
+    for (const bad of ['Wir helfen', 'bei uns', 'unsere Kunden']) expect(bad).toMatch(WE);
+    for (const ok of ['Wirkung', 'unsicher', 'winget']) expect(ok).not.toMatch(WE);
   });
 
-  it('never uses du/dich/dir/dein or wir/uns/unser', () => {
+  it('uses "du": no Sie/Ihnen/Ihr, and never wir/uns/unser', () => {
     const hits = germanTexts.flatMap((t) => {
-      const m = FORBIDDEN.exec(t);
+      const m = FORMAL.exec(t) ?? WE.exec(t);
       return m ? [`"${m[0]}" in: ${t.slice(Math.max(0, m.index - 40), m.index + 40)}`] : [];
     });
     expect(hits).toEqual([]);

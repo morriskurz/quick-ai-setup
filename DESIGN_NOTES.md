@@ -142,7 +142,7 @@ goals, extras, page copy, chrome in `ui.ts`, prompt prose, project template). Co
 ids and order exist only in the English data. Components read copy through `useContent()`
 (`src/hooks/langContext.ts`); the generator takes a trailing `lang`. The global house rules
 stay English in both languages. `src/content/i18n.test.ts` fails on any missing German key
-and on "du"/"wir" forms.
+and on formal address ("Sie"/"Ihr") or "wir".
 
 The UI consumes content only through `src/content/index.ts` and
 `src/lib/generate.ts`. Page copy comes from `heroCopy`, `sectionCopy` and
@@ -174,5 +174,8 @@ design-system project too, or other creativecodecampus pages keep the old patter
 - **No uppercase labels.** Eyebrow labels are sentence case with footnote tracking (0.02em).
   Section labels were removed where they repeated the headline; kept only on the hero
   ("Advanced AI setup for anyone") and "How to get started".
+- **German uses "du".** The German version addresses the reader (and, in the prompt, the reader
+  addresses the agent) informally, lowercase "du"/"dein", overriding the design system's formal-"Sie"
+  rule (owner, 2026-09-24). The owner still speaks as "ich", never "wir".
 - **Kept on purpose:** the cyan glow on the primary button, the hero's scrims/vignette/bloom,
   and the numbered install steps (a real procedure, not filler).

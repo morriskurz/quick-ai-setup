@@ -409,17 +409,17 @@ describe('German prompt keeps every safety rule', () => {
 
   it('answers in German and has the same rules, in the same order', () => {
     const prompt = buildAgentPrompt(sel(), 'de');
-    expect(prompt.split('\n')[0]).toContain('Antworten Sie mir auf Deutsch');
+    expect(prompt.split('\n')[0]).toContain('Antworte mir auf Deutsch');
     expect(PROMPT_DE.rules).toHaveLength(PROMPT_EN.rules.length);
     for (const phrase of [
-      'Zeigen Sie jeden Befehl, bevor Sie ihn ausführen, und sagen Sie in einem Satz, was er tut.',
-      'Wechseln Sie nie eigenmächtig zu einem anderen Installer.',
-      'Tippen, erfragen oder speichern Sie nie Passwörter, Tokens, Schlüssel oder Einmalcodes',
-      'Wenn ein Schritt STOP sagt, halten Sie an.',
-      'Führen Sie sudo- oder Administratorbefehle nie selbst aus. Zeigen Sie sie mir, STOP,',
-      'Wartet ein Befehl auf eine Eingabe, die Sie nicht geben können, brechen Sie ihn ab und fragen Sie mich.',
-      'Löschen Sie keine Dateien',
-      'Fassen Sie kurz zusammen',
+      'Zeig jeden Befehl, bevor du ihn ausführst, und sag in einem Satz, was er tut.',
+      'Wechsle nie eigenmächtig zu einem anderen Installer.',
+      'Tippe, erfrage oder speichere nie Passwörter, Tokens, Schlüssel oder Einmalcodes',
+      'Wenn ein Schritt STOP sagt, halte an.',
+      'Führe sudo- oder Administratorbefehle nie selbst aus. Zeig sie mir, STOP,',
+      'Wartet ein Befehl auf eine Eingabe, die du nicht geben kannst, brich ihn ab und frag mich.',
+      'Lösche keine Dateien',
+      'Fass kurz zusammen',
     ]) {
       expect(prompt, phrase).toContain(phrase);
     }
@@ -452,9 +452,9 @@ describe('German prompt keeps every safety rule', () => {
   it('backs up before Context7, RTK, Caveman and the house rules', () => {
     for (const os of OSES) {
       const prompt = buildAgentPrompt(full(os), 'de');
-      const backup = prompt.indexOf('Die Instruktionsdateien Ihrer Agenten sichern');
+      const backup = prompt.indexOf('Die Instruktionsdateien deiner Agenten sichern');
       expect(backup).toBeGreaterThan(-1);
-      for (const marker of ['ctx7 setup', 'rtk init', 'JuliusBrussee/caveman', 'Schreiben Sie die Hausregeln']) {
+      for (const marker of ['ctx7 setup', 'rtk init', 'JuliusBrussee/caveman', 'Schreib die Hausregeln']) {
         expect(prompt.indexOf(marker), `${os}:${marker}`).toBeGreaterThan(backup);
       }
     }
@@ -474,19 +474,19 @@ describe('German prompt keeps every safety rule', () => {
     const claude = buildAgentPrompt(sel(), 'de');
     expect(claude.trimEnd().split('\n').pop()).toContain('Claude Code in einem Projektordner neu starten und /grill-me tippen');
     const codex = buildAgentPrompt(sel({ agents: ['codex'] }), 'de');
-    expect(codex.trimEnd().split('\n').pop()).toContain('„Den grill-me-Skill verwenden:“');
+    expect(codex.trimEnd().split('\n').pop()).toContain('„Nutze den grill-me-Skill:“');
     expect(codex).not.toContain('/grill-me');
   });
 
   it('keeps the RTK telemetry question with the user', () => {
     const prompt = buildAgentPrompt(sel({ agents: ALL_AGENTS, extras: ['rtk'] }), 'de');
-    expect(prompt).toContain('Das beantworten nur Sie; ein Agent hält an und fragt Sie.');
+    expect(prompt).toContain('Das beantwortest nur du; ein Agent hält an und fragt dich.');
   });
 
   it('uses the German template and keeps the owner’s rules English and verbatim', () => {
     const prompt = buildAgentPrompt(sel({ agents: ['claude-code', 'codex'], goals: ['websites'] }), 'de');
     expect(prompt).toContain('## Verification Protocol');
-    expect(prompt).toContain('Übernehmen Sie sie wörtlich');
+    expect(prompt).toContain('Übernimm sie wörtlich');
     expect(prompt).toContain('In AGENTS.md-Dateien lautet die erste Zeile „# Working Rules“');
     expect(prompt).toContain('# Projektregeln');
     expect(prompt).toContain('pnpm verwenden, nicht npm');
